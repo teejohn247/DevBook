@@ -7,10 +7,55 @@
   pointer-events: none;
 }
 
+/* .login{
+  background: "white" !important;
+  background-size: cover;
+  min-width: 100%;
+  min-height: 100%;
+} */
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
+}
+
+.alert{
+  overflow: hidden;
+    display: inline-block !important;
+    box-shadow: 0 4px 8px rgb(0 0 0 / 19%);
+    /* width: 50%; */
+    /* float: left; */
+    /* width: 250px; */
+    height: 20px;
+    transition: background-color .1s;
+    display: flex;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    /* left: 0; */
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -ms-flex-align: center;
+    align-items: flex-start;
+    -ms-flex-pack: center;
+    justify-content: flex-end;
+    padding: 20px;
+    background-color: transparent;
+    z-index: 1060;
+    border-radius: 20px;
+    overflow-x: hidden;
+    background: white;
+}
+
+.alert-img {
+  max-width: 100%;
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
+  /* background: red; */
+  box-sizing: border-box;
 }
 
 .App-header {
