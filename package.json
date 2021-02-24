@@ -14,9 +14,12 @@
     "react-redux": "^7.2.2",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.4",
+    "react-textarea-autosize": "^8.3.1",
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
+    "socket.io-client": "^3.1.1",
+    "socketio-file-upload": "^0.7.3",
     "uuid": "^8.3.2"
   },
   "scripts": {
