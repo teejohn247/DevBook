@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { POST, GET_POST, POST_ERROR } from './types';
+import { POST, GET_POST, ADD_LIKE, ADD_COMMENT, REMOVE_LIKE, REMOVE_COMMENT_LIKE, ADD_COMMENT_LIKE, POST_ERROR } from './types';
 import { setAlert } from './alert';
 
 export const getPosts = (data) => dispatch => {
@@ -8,6 +8,53 @@ export const getPosts = (data) => dispatch => {
             payload: data
        }
    
+}
+
+export const addLike = (data) => dispatch => {
+    return {
+         type:ADD_LIKE,
+         payload: data
+    }
+
+}
+
+export const addCommentLike = (data) => dispatch => {
+    dispatch({
+         type:ADD_COMMENT_LIKE,
+         payload: data
+    })
+}
+
+
+export const removeCommentLike = (data) => dispatch => {
+    dispatch({
+         type:REMOVE_COMMENT_LIKE,
+         payload: data
+    })
+}
+
+
+
+export const addComment = (data) => dispatch => {
+    console.log({data})
+    dispatch({
+        type:ADD_COMMENT,
+        payload: data
+    })
+    // return {
+    //      type:ADD_COMMENT,
+    //      payload: data
+    // }
+
+}
+
+export const removeLike = (data) => dispatch => {
+
+    return {
+         type:REMOVE_LIKE,
+         payload: data
+    }
+
 }
 
 export const getCurrentPost = () => async dispatch => {

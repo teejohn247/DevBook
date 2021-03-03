@@ -7,8 +7,9 @@ import { Provider } from 'react-redux';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import Dashboard from './components/dashboard/Dashboard';
+import Timeline from './components/dashboard/Timeline';
 
-// import PrivateRoute from './components/routing/PrivateRoute';
+import PrivateRoute from './components/routing/PrivateRoute';
 
 
 // import Alert from './components/layout/Alert';
@@ -33,22 +34,22 @@ useEffect (() => {
             <div>
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
-              <Route exact path="/dashboard" component={Dashboard} />
+              {/* <Route exact path="/dashboard" component={Dashboard} /> */}
 
             {/* <Alert /> */}
 
               {/* <Route exact path="/profiles" component={Profiles} />
               <Route exact path="/profile/:id" component={Profile} /> */}
               <Switch>
-                {/* <PrivateRoute exact path="/dashboard" component={Dashboard} /> */}
+                <PrivateRoute exact path="/dashboard" component={Dashboard} />
               </Switch>
-              {/* <Switch>
+              <Switch>
                 <PrivateRoute
                   exact
-                  path="/create-profile"
-                  component={CreateProfile}
+                  path="/profile"
+                  component={Timeline}
                 />
-              </Switch> */}
+              </Switch>
               {/* <Switch>
                 <PrivateRoute
                   exact

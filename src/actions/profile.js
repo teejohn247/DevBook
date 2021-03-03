@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GET_PROFILE, PROFILE_ERROR, CLEAR_PROFILE, UPDATE_PROFILE,GET_PROFILES, DELETE_EDU, DELETE_EXP } from './types';
+import { GET_PROFILE, PROFILE_ERROR, EDIT_PROFILE, CLEAR_PROFILE, UPDATE_PROFILE,GET_PROFILES, DELETE_EDU, DELETE_EXP } from './types';
 import { setAlert } from './alert';
 
 export const getProfiles = () => async dispatch => {
@@ -85,6 +85,36 @@ export const createProfile = (formData, history, edit=false) => async dispatch =
         })
     }
 }
+
+export const editProfile = (data) => async dispatch => {
+    const config = {
+        headers: {
+        'content-type': 'application/json'
+        }
+    }
+    try{
+        const res = await axios.patch('http://localhost:4000/api/v1/editProfile', data, config);
+        dispatch({
+            type:EDIT_PROFILE,
+            payload: res.data
+        })
+        dispatch(setAlert('Profile updated', 'success-grn'));
+            // history.push('/dashboard');
+    } catch(err){
+        const errors = err.response.data.errors
+        if(errors){
+            errors.forEach(error => dispatch(
+                setAlert(error.msg, 'danger')
+        ))
+        }
+        dispatch({
+            type:PROFILE_ERROR,
+            payload: {error: err.response.error}
+
+        })
+    }
+}
+
 export const addEducation = (formData, history) => async dispatch => {
     const config = {
         headers: {
