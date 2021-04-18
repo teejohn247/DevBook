@@ -1,11 +1,12 @@
 import axios from 'axios';
-import { GET_PROFILE, PROFILE_ERROR, EDIT_PROFILE, CLEAR_PROFILE, UPDATE_PROFILE,GET_PROFILES, DELETE_EDU, DELETE_EXP } from './types';
+import { GET_PROFILE, PROFILE_ERROR, EDIT_PROFILE, CLEAR_PROFILE, UPDATE_PROFILE,GET_PROFILES, DELETE_EDU,
+     DELETE_EXP, ADD_FRIEND, ACCEPT_FRIEND, REJECT_FRIEND, SEARCH_USER } from './types';
 import { setAlert } from './alert';
 
 export const getProfiles = () => async dispatch => {
-    dispatch({type: CLEAR_PROFILE})
+    // dispatch({type: CLEAR_PROFILE})
     try{
-        const res = await axios.get('http://localhost:4000/api/v1/all');
+        const res = await axios.get('http://localhost:4000/api/v1/allprofiles');
         dispatch({
             type:GET_PROFILES,
             payload: res.data
@@ -18,12 +19,13 @@ export const getProfiles = () => async dispatch => {
     }
 }
 
-export const getProfileById = (userId) => async dispatch => {
+export const getFriendsProfiles = () => async dispatch => {
+    // dispatch({type: CLEAR_PROFILE})
     try{
-        const res = await axios.get(`http://localhost:4000/api/v1/specific/${userId}`);
+        const res = await axios.get('http://localhost:4000/api/v1/getProfiles');
         dispatch({
-            type:GET_PROFILE,
-            payload: res.data
+            type:GET_PROFILES,
+            payload: res.data.records
         })
     } catch(err){
         dispatch({
@@ -32,6 +34,75 @@ export const getProfileById = (userId) => async dispatch => {
         })
     }
 }
+
+export const addFriend = (data) => (dispatch, getState) => {
+    console.log({data})
+    const state = getState()
+
+    return {
+        type:ADD_FRIEND,
+        payload: data,
+        auth: state.auth
+
+    }
+}
+
+
+export const confirmFriend = (data) => dispatch => {
+    console.log({data})
+    return {
+        type:ACCEPT_FRIEND,
+        payload: data
+    }
+}
+
+
+export const getProfileById = (userId) =>async (dispatch, getState)=> {
+    const state = getState()
+    let ID;
+    if(state.auth.user){
+    let id = state.auth.user._id
+    console.log('sql', id)
+    if(userId == null || userId == undefined){
+        ID = id
+    }else{
+        ID = userId
+    }
+
+    
+    try{
+        const res = await axios.get(`http://localhost:4000/api/v1/profile/${ID}`);
+        console.log('sql2', res.data)
+        
+        dispatch({
+            type:GET_PROFILE,
+            payload: res.data
+        })
+        return;
+        
+    } catch(err){
+        dispatch({
+            type:PROFILE_ERROR,
+            payload: {error: err.response.error, status: err.response.status}
+        })
+    }
+}
+}
+
+// export const getProfileById = (userId) => async dispatch => {
+//     try{
+//         const res = await axios.get(`/api/v1/specific/${userId}`);
+//         dispatch({
+//             type:SEARCH_USER,
+//             payload: res.data
+//         })
+//     } catch(err){
+//         dispatch({
+//             type:PROFILE_ERROR,
+//             payload: {error: err.response.error, status: err.response.status}
+//         })
+//     }
+// }
 
 export const getCurrentProfile = () => async dispatch => {
     //  dispatch({type: CLEAR_PROFILE})
@@ -139,7 +210,6 @@ export const addEducation = (formData, history) => async dispatch => {
         dispatch({
             type:PROFILE_ERROR,
             payload: {error: err.response.error}
-
         })
     }
 }

@@ -4,28 +4,78 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import io from "socket.io-client";
 import { getPosts } from '../../actions/post';
+import { loader, removeLoader } from '../../actions/loader';
+
 
 
 import TextareaAutosize from "react-textarea-autosize";
 
 import { addLike, removeLike, addComment, addCommentLike, removeCommentLike } from '../../actions/post';
 import LoadingSpinner from '../layout/spinner';
+import { Alert } from 'react-bootstrap';
 
-const socket = io.connect('http://localhost:4000')
+import live from '../../images/assets/images/icons/live.png';
+import photo from '../../images/assets/images/icons/photo.png';
+import tagFriend from '../../images/assets/images/icons/tag-friend.png';
+import avatar from '../../images/assets/images/avatars/avatar-2.jpg';
 
 
 
-const inputField = ({user,profile, getPosts}) => {
+
+
+// const socket = io.connect('http://localhost:4000', { 'forceNew': true })
+
+
+
+
+const inputField = ({ loader, removeLoader, user, profile, socket, onChange, value, feedLoader}) => {
+    // console.log({loader})
+
     const [selectetdFile, setSelectedFile] = useState([]);
-    const [post, setPost] = useState("");
+    const [post, setPost] = useState(value);
     const [emmited, setEmmited] = useState(false);
     const [postField, setPostField] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(!loader);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+
     const [postInput, setPostInput] = useState(false);
+
+    const [comment, setComment] = useState("");
+    const [emitComment, setEmitComment] = useState(false);
+    const [like, setLike] = useState(false);
+
+    function handleChange(event) {
+        // Here, we invoke the callback with the new value
+        // postInput(true)
+        onChange(event.target.value);
+        // setPost(value)
+        // console.log({post})
+      }
+
+    //   function handleChange(event) {
+    //     onChange2(true);
+    //   }
+
+
+
+
+
+    // useEffect(() => {
+    //     // console.log("commentLikes",comments.commentLikes)
+
+    //     if (likes) {
+    //         likes.some((like, i) => {
+    //             like.user == user._id ? setUserLike(true) : setUserLike(false)
+    //         })
+    //     }
+    // }, [userLike])
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
-        setIsLoading(true)
+        setIsLoading(loader)
+        // onChange(true)
+        console.log({onChange})
         var d = new Date();
         var unique = d.valueOf();
 
@@ -34,20 +84,28 @@ const inputField = ({user,profile, getPosts}) => {
         // var files 
         if (selectetdFile.length > 0) {
             console.log(selectetdFile)
+            alert('here1')
 
             socket.emit('post_with_images', {
                 file_id: unique,
-                text: post,
+                user_id: user._id,
+                text: value,
                 name: user.name,
                 email: user.email,
-                user: profile.user,
-                time: Date.now(),
+                user_image: user.image,
+                user_id: profile.user,
+                date: Date.now(),
                 likes: [],
                 comments: [],
-                images: selectetdFile
-            })
+                images: selectetdFile,
+                postIsLoading: true
 
+            })
+           
             setEmmited(true)
+        // setIsLoading(!loader)
+        removeLoader()
+
 
 
         } else {
@@ -56,24 +114,38 @@ const inputField = ({user,profile, getPosts}) => {
 
             socket.emit('post', {
                 file_id: unique,
+                user_id: user._id,
                 name: user.name,
                 email: user.email,
-                user: profile.user,
-                time: Date.now(),
+                user_id: profile.user,
+                user_image: user.image,
+                date: Date.now(),
                 likes: [],
                 comments: [],
-                text: post,
+                text: value,
+                postIsLoading: true
                 // name: 
             })
-
             setEmmited(true)
-
+        setIsLoading(!loader)
 
         }
 
     }
 
     const [fileBase64String, setFileBase64String] = useState("");
+
+    socket.on('post_with_images', function (data) {
+     
+
+
+      
+        setSelectedFile([])
+        // setSelectetdFile([])
+      
+
+
+    })
 
   
     function handleRemove(id) {
@@ -100,6 +172,9 @@ const inputField = ({user,profile, getPosts}) => {
     }
 
     const encodeFileBase64 = async (e) => {
+        if(e.target.files && e.target.files.length > 2){
+            alert("You cannot upload more than 3 files")
+        }
         if (e.target.files && e.target.files.length > 0) {
             const newImagesPromises = []
             for (let i = 0; i < e.target.files.length; i++) {
@@ -143,62 +218,42 @@ const inputField = ({user,profile, getPosts}) => {
 
     
     const handleTarget = () => {
-
         setPostInput(!postInput)
         console.log({ postInput })
     }
 
-    
-    useEffect(() => {
+    socket.on('post', function (data) {
+        console.log(data);
+        // alert('here33')
 
-        if (emmited == true) {
-            socket.on('post', function (data) {
-                console.log(data);
-
-
-                dispatch(getPosts(data))
-                socket.off("post");
-                setPost("")
-                setIsLoading(false)
-                setEmmited(false)
-                setPostInput(false)
-                setPostField(false)
-
-
-            })
-            socket.on('post_with_images', function (data) {
-                console.log(data);
-                var arr = []
-                data.images.map(async (file, i) => {
-                    var new_obj = {};
-                    new_obj.file_id = data.file_id;
-                    new_obj.image = file;
-                    arr.push(new_obj);
-                })
-                let msg = {
-                    email: data.email,
-                    file_id: data.file_id,
-                    images: arr,
-                    text: data.text,
-                    time: data.time,
-                    user: data.user
-                }
-                dispatch(getPosts(msg))
-                socket.off("post_with_images");
-                setPost("")
-                setSelectedFile([])
-                setPostField(false)
-                setIsLoading(false)
-                setPostInput(false)
-                setEmmited(false)
+        setIsLoaded(false)
+        // setEmmited(false)
+        setPostInput(false)
+        setPostField(false)
+        // setComment("");
+        // setIsLoading(false);
+        // setEmmited(false)
+        // setEmitComment(false);
+       
+    })
 
 
-            })
-        }
+    socket.on('post_with_images', function (data) {
+        console.log(data);
+        // alert('here33')
+
+        setIsLoaded(false)
+        // setEmmited(false)
+        setPostInput(false)
+        setPostField(false)
+        // setComment("");
+        // setIsLoading(false);
+        // setEmmited(false)
+        // setEmitComment(false);
+       
+    })
 
 
-
-    }, [emmited])
 
 
 
@@ -209,32 +264,33 @@ const inputField = ({user,profile, getPosts}) => {
                 <div className="post-new">
                     <div className="post-new-media">
                         <div className="post-new-media-user">
-                            <img src="assets/images/avatars/avatar-2.jpg" alt />
+                            <img src={user.image} alt />
                         </div>
                         <div className="post-new-media-input">
                             {/* <input type="text" placeholder="Write your comment..." /> */}
 
-                            <input type="text" onClick={handleTarget} className="uk-input" placeholder="What's Your Mind ? Hamse!" />
+                            <input type="text" onClick={handleTarget} value={post} onChange={handleChange} className="uk-input" placeholder= {`What's on Your Mind ${user.name.split(" ")[0]}?`} />
                         </div>
                     </div>
                     <hr />
-                    <div className="post-new-type">
+                    {/* <div className="post-new-type">
                         <a href="#">
-                            <img src="assets/images/icons/live.png" alt />
+                        
+                            <img src={live} alt />
                                                     Go Live
                                                     </a>
                         <a href="#">
-                            <img src="assets/images/icons/photo.png" alt />
+                            <img src={photo} alt />
                                                     Photo/Video
                                                     </a>
                         <a href="#" className="uk-visible@s">
-                            <img src="assets/images/icons/tag-friend.png" alt />
+                            <img src={photo} alt />
                                                     Tag Friend
                                                     </a>
-                        <a href="#"><img src="assets/images/icons/reactions_wow.png" alt />
+                        <a href="#"><img src={photo} alt />
                                                     Fealing
                                                     </a>
-                    </div>
+                    </div> */}
                 </div>
             }
             {postInput ?
@@ -250,15 +306,19 @@ const inputField = ({user,profile, getPosts}) => {
                                 </div>
                                 <div className="post-new-media">
                                     <div className="post-new-media-user">
-                                        <img src="assets/images/avatars/avatar-2.jpg" alt />
+                                        {/* <img src={avatar} alt /> */}
+                                     <img src={user.image} alt />
+
                                     </div>
                                     <div className="post-new-media-input">
-                                        <input type="text" value={post} onChange={e => setPost(e.target.value)} className="uk-input" placeholder="What's Your Mind ? Dennis!" />
+                                    <input type="text" value={value} onChange={handleChange}
+                                    className="uk-input" placeholder= {`What's on Your Mind ${user.name.split(" ")[0]}?`} />
+                                        {/* <input type="text" value={post} onChange={e => setPost(e.target.value)} className="uk-input" placeholder="What's Your Mind ? Dennis!" /> */}
                                     </div>
                                 </div>
                                 <div className="post-new-tab-nav">
-                                    <div style={{ width: "30%" }}>
-                                        <label htmlFor="upload-button" style={{ display: 'flex' }}>
+                                    <div style={{ width: "100%" }}>
+                                        <label htmlFor="upload-button" style={{ display: 'flex', justifyContent: "center" }}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24">
                                                 <path fill="#4db3f6" d="M8.5,13.5L11,16.5L14.5,12L19,18H5M21,19V5C21,3.89 20.1,3 19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19Z">
                                                 </path>
@@ -274,7 +334,7 @@ const inputField = ({user,profile, getPosts}) => {
                                         />
                                         <br />
                                     </div>
-
+{/* 
                                     <div style={{ width: "30%" }}>
                                         <label htmlFor="video-button" style={{ display: 'flex' }}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 512 512">
@@ -291,10 +351,9 @@ const inputField = ({user,profile, getPosts}) => {
                                             onChange={encodeFileBase64}
                                         />
                                         <br />
-                                        {/* <button>Upload</button> */}
-                                    </div>
+                                    </div> */}
 
-                                    <div style={{ width: "30%" }}>
+                                    {/* <div style={{ width: "30%" }}>
                                         <label htmlFor="file-button" style={{ display: 'flex' }}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24">
                                                 <path fill="#4db3f6" d="M8.5,13.5L11,16.5L14.5,12L19,18H5M21,19V5C21,3.89 20.1,3 19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19Z">
@@ -310,18 +369,19 @@ const inputField = ({user,profile, getPosts}) => {
                                             onChange={encodeFileBase64}
                                         />
                                         <br />
-                                        {/* <button>Upload</button> */}
-                                    </div>
-                                    <div>
+                                    </div> */}
+                                    <div style={{display:"flex"}}>
                                         {selectetdFile.length > 0 ? selectetdFile.map((a, i) =>
-                                            <span className="img-contain">
+                                            <span className="img-contain img-mob" style={{
+                                                marginRight: "20px"}}>
                                                 <img key={i} src={a} style={{
-                                                    width: '15%',
+                                                    width: '100%',
+                                                    objectFit: 'cover',
                                                     marginRight: '10px',
                                                     height: '100px',
                                                     borderRadius: '20px '
                                                 }} />
-                                                {/* <p onClick={() => handleRemove(i)}>Cancel</p> */}
+                                                <p style={{color: "red",marginLeft: "30px"}} onClick={() => handleRemove(i)}>Remove</p>
                                             </span>) : ''
                                         }
                                     </div>
@@ -331,13 +391,13 @@ const inputField = ({user,profile, getPosts}) => {
                                     <button className="button outline-light circle" type="button" style={{ borderColor: '#e6e6e6', borderWidth: 1 }}>Public</button>
                                     <div uk-dropdown>
                                         <ul className="uk-nav uk-dropdown-nav">
-                                            <li className="uk-active"><a href="#">Only me</a></li>
-                                            <li><a href="#">Every one</a></li>
-                                            <li><a href="#"> People I Follow </a></li>
-                                            <li><a href="#">I People Follow Me</a></li>
+                                            <li className="uk-active"><a href="#">Every One</a></li>
+                                            {/* <li><a href="#">Every one</a></li> */}
+                                            {/* <li><a href="#"> People I Follow </a></li>
+                                            <li><a href="#">I People Follow Me</a></li> */}
                                         </ul>
                                     </div>
-                                    <input type="submit" value={isLoading ? "Loading..." : "Share"} className="button primary px-6" />
+                                    <input type="submit" value={isLoaded ? "Loading..." : "Share"} className="button primary px-6" />
 
                                 </div>
                             </div>
@@ -355,9 +415,21 @@ const inputField = ({user,profile, getPosts}) => {
 inputField.PropTypes = {
     // postItem: PropTypes.bool.isRequired,
     getPosts: PropTypes.func.isRequired,
+    addComment: PropTypes.func.isRequired,
+    addLike: PropTypes.func.isRequired,
+    addCommentLike: PropTypes.func.isRequired,
+    removeLike: PropTypes.func.isRequired,
+    removeCommentLike: PropTypes.func.isRequired,
+    loader: PropTypes.func.isRequired,
+    removeLoader: PropTypes.func.isRequired,
 
 }
 const mapStateToProps = (state) => ({
     auth: state.auth,
+    post: state.post,
+    loader: state.loader
+
 })
-export default connect(mapStateToProps, { getPosts})(inputField);
+export default connect(mapStateToProps, { getPosts, loader, removeLoader, addComment, addLike, removeLike, addComment, addCommentLike, removeCommentLike})(inputField);
+
+// { addLike, removeLike, addComment, addCommentLike, removeCommentLike }

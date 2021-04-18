@@ -7,6 +7,8 @@ import { register } from '../../actions/auth';
 import LoadingSpinner from '../layout/spinner';
 import { setAlert } from '../../actions/alert';
 import Alert from '../layout/Alert';
+import Loader from '../layout/small_spinner';
+
 
 const Register = ({ setAlert, register, isAuthenticated, alert }) => {
     const dispatch = useDispatch();
@@ -128,7 +130,7 @@ const Register = ({ setAlert, register, isAuthenticated, alert }) => {
                                             {loading == false ?
                                                 <div className="uk-width-auto@s" style={{"height": "30px"}}>
                                                     <input type="submit" className="button primary" style={{"width": "100%"}} defaultValue="Get Started" />
-                                                </div> : <LoadingSpinner />
+                                                </div> : <Loader />
                                             }
                                         </div>
                                     </div>

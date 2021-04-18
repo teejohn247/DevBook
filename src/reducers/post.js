@@ -1,18 +1,24 @@
 import { POST, GET_POST, ADD_LIKE, REMOVE_LIKE, REMOVE_COMMENT_LIKE, ADD_COMMENT, ADD_COMMENT_LIKE } from '../actions/types'
+import store from '../store';
+import loader from '../actions/loader';
 
 const initialState = {
     post: null,
     posts: [],
     loading: true,
     feedLoader: true,
+    like: null,
     error: {}
 }
 
 
 export default function (state = initialState, action) {
-    const { type, payload } = action;
-    console.log('comment', payload)
+
+    const { type, payload, profile } = action;
+
+    console.log('comment',profile)
     switch (type) {
+
         case GET_POST:
             return {
                 ...state,
@@ -25,45 +31,45 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 post: payload,
-                posts: [payload, ...state.posts],
+                posts: [profile.profile.friendsList.some(frnd => payload.user_id || frnd.user == payload.user_id) && payload, ...state.posts],
                 loading: false,
                 feedLoader: false
-
             }
+        case ADD_COMMENT:
+                return {
+                    ...state,
+                    post: payload,
+                    posts: state.posts.map(post => post.file_id == payload.file_id ? { ...post, comments:[...post.comments, {file_id: payload.file_id, comment_id:payload.comment_id, name: payload.name, text: payload.text, commentLikes:[]}]} : post),
+                    loading: false
+                }
         case ADD_LIKE:
             return {
                 ...state,
                 post: payload,
-                posts: state.posts.map(post => post.file_id == payload.file_id ? { ...post, likes:{user: payload._id}} : post),
+                posts: state.posts.map(post => post.file_id == payload.file_id ? { ...post,  likes:[...post.likes, {user: payload._id, like_req:payload.like}]} : post),
                 loading: false
             }
-            case ADD_COMMENT_LIKE:
+            case ADD_COMMENT_LIKE: 
             return {
                 ...state,
                 post: payload,
-                posts: state.posts.map(post => post.file_id == payload.file_id ? {...post, comments:post.comments.map(comment => comment.comment_id == payload.comment_id ? {...comment, commentLikes:[ ...comment.commentLikes, {user: comment.name}]} : comment )} : post ),
+                posts: state.posts.map(post => post.file_id == payload.file_id ? {...post, comments:post.comments.map(comment => comment.comment_id == payload.comment_id ? {...comment, commentLikes:[ ...comment.commentLikes, {user: payload.name}]} : comment )} : post ),
                 loading: false
             }
 
             case REMOVE_COMMENT_LIKE:
                 return {
                     ...state,
-                    posts: state.posts.map(post => post.file_id == payload.file_id ? {...post, comments:post.comments.map(comment => comment.comment_id == payload.comment_id ? {...comment, commentLikes: comment.commentLikes.filter(like => like.user !== comment.name )} : comment )} : post ),
+                    posts: state.posts.map(post => post.file_id == payload.file_id ? {...post, comments:post.comments.map(comment => comment.comment_id == payload.comment_id ? {...comment, commentLikes: comment.commentLikes.filter(like => like.user !== payload.name )} : comment )} : post ),
                     loading: false
                 }
-            case ADD_COMMENT:
-                return {
-                    ...state,
-                    // post: payload,
-                    posts: state.posts.map(post => post.file_id == payload.file_id ? { ...post, comments:[...post.comments, {file_id: payload.file_id, comment_id:payload.comment_id, name: payload.name, text: payload.text, commentLikes:[]}]} : post),
-                    loading: false
-                }
+            
         case REMOVE_LIKE:
             return {
                 ...state,
-                post: payload,
+                like: payload.like,
                 // post:[ ...state.post, state.post.likes.filter(like => like._id !== payload._id)],
-                posts: state.posts.map(post => post.file._id == payload.file_id ? { ...post, likes: post.likes.filter(like => like._id !== payload._id)} : post),
+                posts: state.posts.map(post => post.file_id == payload.file_id ? { ...post, likes: post.likes.filter(like => like.user !== payload._id)} : post),
                 loading: false
             }
 

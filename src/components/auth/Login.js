@@ -4,6 +4,8 @@ import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { login } from '../../actions/auth';
 import LoadingSpinner from '../layout/spinner';
+import Loader from '../layout/small_spinner';
+
 import { setAlert } from '../../actions/alert';
 import Alert from '../layout/Alert';
 
@@ -91,7 +93,7 @@ const Login = ({ setAlert, login, alert, isAuthenticated, user }) => {
                                         { loading == false ?
                                         <div className="uk-width-auto@s">
                                             <button type="submit" className="button primary" style={{"width": "100%"}}>Get Started</button>
-                                        </div> : <LoadingSpinner />
+                                        </div> : <Loader />
                                         }
                                     </div>
                                 </form>

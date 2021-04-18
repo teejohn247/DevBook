@@ -15,9 +15,11 @@ const socket = io.connect('http://localhost:4000')
 
 const input = ({ editProfile, user, profile, getPosts, onClick, value }) => {
 
+    // let cover = profile.cover
+
 
     const [selectetdFile, setSelectedFile] = useState([]);
-    const [cover, setCover] = useState([]);
+    const [cover, setCover] = useState([profile.cover]);
 
     const [post, setPost] = useState("");
     const [emmited, setEmmited] = useState(false);
@@ -27,11 +29,11 @@ const input = ({ editProfile, user, profile, getPosts, onClick, value }) => {
     const [close, setClose] = useState(!value);
 
     const [username, setUsername] = useState(user.name);
-    const [company, setCompany] = useState(profile.company);
-    const [github, setGithub] = useState(profile.githubusername);
-    const [location, setLocation] = useState(profile.location);
-    const [website, setWebsite] = useState(profile.website);
-    const [skills, setSkills] = useState(profile.skills.join());
+    const [company, setCompany] = useState(profile.company ? profile.company : '');
+    const [github, setGithub] = useState(profile.githubusername ? profile.githubusername : '');
+    const [location, setLocation] = useState(profile.location ? profile.location : '');
+    const [website, setWebsite] = useState(profile.website ? profile.website : '');
+    const [skills, setSkills] = useState(profile.skills ? profile.skills.join() : '');
     const [bio, setBio] = useState(profile.bio);
 
     const buttonNameRef = useRef()
@@ -59,7 +61,7 @@ const input = ({ editProfile, user, profile, getPosts, onClick, value }) => {
     const handleEdit = async(e) => {
         e.preventDefault();
         setIsLoading(true);
-        let data = {username: username, cover: cover[0], skills: skills, bio: bio, company: company, image:!selectetdFile[0] ? profile.image : selectetdFile[0], github: github ? github:"", location: location, website: website}
+        let data = {name: username, cover: cover[0], skills: skills, bio: bio, company: company, image:!selectetdFile[0] ? profile.image : selectetdFile[0], github: github ? github:"", location: location, website: website}
         await editProfile(data);
         buttonNameRef.current.click();
         setIsLoading(false);
@@ -157,7 +159,7 @@ const input = ({ editProfile, user, profile, getPosts, onClick, value }) => {
                 newImagesPromises.push(fileToDataUri(e.target.files[i]))
             }
             const newImages = await Promise.all(newImagesPromises)
-            setCover([...cover, ...newImages]);
+            setCover([...newImages]);
             console.log('chk', cover)
 
         }
@@ -212,56 +214,56 @@ const input = ({ editProfile, user, profile, getPosts, onClick, value }) => {
     // }
 
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        if (emmited == true) {
-            socket.on('post', function (data) {
-                console.log(data);
-
-
-                dispatch(getPosts(data))
-                socket.off("post");
-                setPost("")
-                setIsLoading(false)
-                setEmmited(false)
-                setPostInput(false)
-                setPostField(false)
+    //     // if (emmited == true) {
+    //         socket.on('post', function (data) {
+    //             console.log(data);
 
 
-            })
-            socket.on('post_with_images', function (data) {
-                console.log(data);
-                var arr = []
-                data.images.map(async (file, i) => {
-                    var new_obj = {};
-                    new_obj.file_id = data.file_id;
-                    new_obj.image = file;
-                    arr.push(new_obj);
-                })
-                let msg = {
-                    email: data.email,
-                    file_id: data.file_id,
-                    images: arr,
-                    text: data.text,
-                    time: data.time,
-                    user: data.user
-                }
-                dispatch(getPosts(msg))
-                socket.off("post_with_images");
-                setPost("")
-                setSelectedFile([])
-                setPostField(false)
-                setIsLoading(false)
-                setPostInput(false)
-                setEmmited(false)
+    //             dispatch(getPosts(data))
+    //             socket.off("post");
+    //             setPost("")
+    //             setIsLoading(false)
+    //             setEmmited(false)
+    //             setPostInput(false)
+    //             setPostField(false)
 
 
-            })
-        }
+    //         })
+    //         socket.on('post_with_images', function (data) {
+    //             console.log(data);
+    //             var arr = []
+    //             data.images.map(async (file, i) => {
+    //                 var new_obj = {};
+    //                 new_obj.file_id = data.file_id;
+    //                 new_obj.image = file;
+    //                 arr.push(new_obj);
+    //             })
+    //             let msg = {
+    //                 email: data.email,
+    //                 file_id: data.file_id,
+    //                 images: arr,
+    //                 text: data.text,
+    //                 time: data.time,
+    //                 user: data.user
+    //             }
+    //             dispatch(getPosts(msg))
+    //             socket.off("post_with_images");
+    //             setPost("")
+    //             setSelectedFile([])
+    //             setPostField(false)
+    //             setIsLoading(false)
+    //             setPostInput(false)
+    //             setEmmited(false)
+
+
+    //         })
+    //     // }
 
 
 
-    }, [emmited])
+    // }, [emmited])
 
     // }
 
@@ -634,7 +636,7 @@ const input = ({ editProfile, user, profile, getPosts, onClick, value }) => {
                                                                     <div className="col-8 col-md-6" style={{width:"100%"}}> <label className="pay">Github Username</label><h4>{profile.github}</h4> </div>
                                                                     <div className="col-8 col-md-6" style={{width:"100%"}}> <label className="pay">Skills</label> <br></br>
                                                                     <span>
-                                                                    {profile.skills.map((skill, i) => {
+                                                                    {profile.skills && profile.skills.map((skill, i) => {
                                                                        return <span style={{marginRight:"5px"}} className="label label-success">{skill}</span> 
                                                                     })}
                                                                     </span> </div>

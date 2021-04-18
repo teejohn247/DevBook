@@ -6,37 +6,44 @@ import { connect } from 'react-redux';
 import { register } from '../../actions/auth';
 import LoadingSpinner from '../layout/spinner';
 import { setAlert } from '../../actions/alert';
-import { getCurrentProfile } from '../../actions/profile';
+import { getCurrentProfile, confirmFriend, getProfiles } from '../../actions/profile';
 import { getCurrentPost } from '../../actions/post';
 import { getPosts } from '../../actions/post';
+import { loader, removeLoader } from '../../actions/loader';
+import { addStory, getStory } from '../../actions/story';
+import { loadUser } from '../../actions/auth';
 import PostItem from './PostItem';
 import io from "socket.io-client";
 import SocketIOFileUpload from 'socketio-file-upload';
 import Alert from '../layout/Alert';
 import SideBar from "./SideBar";
+import store from "../../store"
+import AllStories from "./AllStories";
+import Online from "./Online";
 import RightSideBar from "./RightSideBar";
 import InputField from "./InputField";
 import Header from "./Header";
 import Story from "./Story";
+import {  addLike, removeLike, addComment, addCommentLike, removeCommentLike } from '../../actions/post';
+import {  addNotification, fetchNotifications, removeNotification } from '../../actions/notification';
 
 
 
 
-
-const socket = io.connect('http://localhost:4000')
+const socket = io.connect('http://localhost:4000', { 'forceNew': true })
 
 // let socket;
 
 
-const Dashboard = ({ getCurrentProfile, getCurrentPost, post: { posts, comments, feedLoader }, getPosts, auth: { user }, profile: { profile, loading } }) => {
-  
-    const [selectetdFile, setSelectedFile] = useState([]);
-    const [post, setPost] = useState("");
-    const [emmited, setEmmited] = useState(false);
-    const [postField, setPostField] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [postInput, setPostInput] = useState(false);
-    const dispatch = useDispatch();
+const Dashboard = ({getProfiles, addNotification, fetchNotifications, loadUser, online, addStory, getStory, loader, removeLoader, confirmFriend, getPosts, getCurrentPost, getCurrentProfile, addLike, removeLike, addComment, addCommentLike, removeCommentLike, post: { posts, comments, feedLoader }, profile: { profile, loading } }) => {
+    console.log({ loader })
+    // const [selectetdFile, setSelectedFile] = useState([]);
+    // const [post, setPost] = useState("");
+    // const [emmited, setEmmited] = useState(false);
+    // const [postField, setPostField] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
+    // const [postInput, setPostInput] = useState(false);
+    // const dispatch = useDispatch();
 
 
 
@@ -49,23 +56,318 @@ const Dashboard = ({ getCurrentProfile, getCurrentPost, post: { posts, comments,
 
 
     // const [files, setFiles] = useState([]);
-  
 
-    useEffect(() => {
-        socket.on('connect', function () {
-            console.log('connected!')
 
-        })
-        getCurrentProfile()
-        getCurrentPost()
+    // useEffect(() => {
+    //     socket.on('connect', function () {
+    //         console.log('connected!')
 
-    }, [])
+    //     })
+    //     loadUser()
+    //     getCurrentProfile()
+    //     getCurrentPost()
 
-    
+
+
+    //     return () => {
+    //         socket.off('disconnect');
+    //      };
+
+    // }, [])
+
+
 
 
 
     // console.log(profile)
+
+    // const [selectetdFile, setSelectedFile] = useState([]);
+    // const [post, setPost] = useState("");
+    // const [emmited, setEmmited] = useState(false);
+    // const [postField, setPostField] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
+    // const [postInput, setPostInput] = useState(false);
+    // const dispatch = useDispatch();
+
+    const [comment, setComment] = useState("");
+
+    const [selectetdFile, setSelectedFile] = useState([]);
+    const [post, setPost] = useState("");
+    const [emitComment, setEmitComment] = useState(false);
+    const [like, setLike] = useState(false);
+    const [emmited, setEmmited] = useState(false);
+    const [postField, setPostField] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(true);
+    const [postInput, setPostInput] = useState(false);
+    const [chat, setChat] = useState(false);
+    const [use, setUse] = useState("");
+
+    const dispatch = useDispatch();
+
+    // const [value, setValue] = useState("");
+
+    const state = store.getState()
+    let user = state.auth.user
+
+    
+    const handleChat = (e) => {
+        e.preventDefault();
+        setChat(!chat)
+    }
+
+    function handleChange(newValue) {
+        setPost(newValue);
+        console.log({ post })
+    }
+
+
+    useEffect(() => {
+        // socket.on('connect', function () {
+        //     console.log('connected!')
+        // })
+        // loader(true)
+        // const fetchData = async () => {
+        //     // await loadUser()
+        //     await getCurrentProfile()
+        //     await getCurrentPost()
+        //     await getStory()
+        //     await getProfiles()
+        //     // await fetchNotifications()
+
+        //     // setUse(auth.user)
+        // }
+
+        // fetchData();
+        // return () => {
+        //     socket.off('disconnect');
+        // };
+
+    }, []);
+
+
+    useEffect(() => {
+
+        socket.on('add_comment', function (data) {
+            console.log(data);
+            // alert('here33')
+            dispatch(addComment(data))
+            const state = store.getState()
+            let user = state.auth.user
+            console.log({user})
+            console.log('ggggg', user._id)
+            if(data.user != user._id){
+            dispatch(addNotification(data))
+            }
+
+            // socket.off("add_comment");
+            // setComment("");
+            // setIsLoading(false);
+            // setEmmited(false)
+            // setEmitComment(false);
+
+        })
+
+
+
+        socket.on('confirm_friend', function (data) {
+            console.log(data);
+            var us = store.getState()
+            console.log({ us })
+
+
+            // if(data.receiver == us.auth.user._id){
+            // dispatch(confirmFriend(data))
+            // socket.off("confirm_friend");
+            // setAlert('Request Accepted', 'success');
+            // }
+            // alert('here33')
+            // dispatch(confirmFriend(data))
+            // socket.off("add_comment");
+            // setComment("");
+            // setIsLoading(false);
+            // setEmmited(false)
+            // setEmitComment(false);
+        })
+
+        // if (userLike == true) {
+        // if (data.like = add) {
+
+        // alert('here3')
+        socket.on('like_post', function (data) {
+            setLike(data.like)
+            console.log({ data })
+            console.log({ like })
+            if (data.like == "add") {
+                console.log(data);
+                dispatch(addLike(data))
+                const state = store.getState()
+                let user = state.auth.user
+                console.log({user})
+                console.log('ggggg', user._id)
+                if(data.user != user._id){
+                dispatch(addNotification(data))
+                }
+            } else if (data.like == "remove") {
+                console.log(data);
+                dispatch(removeLike(data))
+
+            }
+
+            // socket.off("like_post");
+            // setUserLike(false)
+            // setEmitComment(false);
+            // setEmmited(false)
+        })
+
+        socket.on('comment_like', function (data) {
+            console.log(data);
+            if (data.like == "add") {
+                console.log(data);
+                console.log("add");
+
+
+                dispatch(addCommentLike(data))
+                console.log('ggggg', user._id)
+                const state = store.getState()
+                let user = state.auth.user
+                console.log({user})
+                console.log('ggggg', user._id)
+                if(data.user != user._id){
+                dispatch(addNotification(data))
+                }
+
+            } else if (data.like == "remove") {
+                console.log(data);
+                console.log("remove");
+
+                dispatch(removeCommentLike(data))
+
+            }
+            // socket.off("comment_like");
+            // setCommentLike(true)
+            // setClEmmited(false)
+            // return
+        })
+        // }
+        //  else if(data.like = remove){
+        //     socket.on('like_post', function (data) {
+        //         console.log(data);
+        //         dispatch(removeLike(data))
+        //         // socket.off("like_post");
+        //         // setUserLike(false)
+        //         // setEmitComment(false);
+        //         // setEmmited(false)
+        //     })
+        // }
+
+        // if (emmited == true) {
+        socket.on('post', function (data) {
+            console.log(data);
+            // const frnds = []
+
+            // profile.friendsList.map((frnd,i) => {
+            //     console.log('vcv',frnd.user)
+            //     frnds.push(frnd.user)
+            // })
+
+            // console.log(frnds)
+
+            // if()
+
+
+
+            // getPosts(data)
+            // socket.off("post");
+            setPost("")
+            setIsLoaded(false)
+            // setEmmited(false)
+            setPostInput(false)
+            setPostField(false)
+            // setIsLoading(!loader)
+            setTimeout(() => {
+              removeLoader()
+            }, 1000);
+
+
+        })
+
+        socket.on('post', function (data) {
+            console.log(data);
+
+
+            dispatch(getPosts(data))
+            // socket.off("post");
+            setPost("")
+            setIsLoaded(false)
+            // setEmmited(false)
+            setPostInput(false)
+            setPostField(false)
+
+
+        })
+
+        socket.on('story', function (data) {
+            console.log(data);
+            dispatch(addStory(data))
+            // addStory(data)
+            // socket.off("post");
+
+        })
+
+
+        socket.on('post_with_images', function (data) {
+            console.log(data);
+            var arr = []
+            data.images.map(async (file, i) => {
+                var new_obj = {};
+                new_obj.file_id = data.file_id;
+                new_obj.image = file;
+                arr.push(new_obj);
+            })
+
+
+            let msg = {
+                email: data.email,
+                file_id: data.file_id,
+                images: arr,
+                likes: [],
+                name: data.name,
+                user_image: data.user_image,
+                date: data.date,
+                text: data.text,
+                time: data.time,
+                user_id: data.user_id
+            }
+
+            // dispatch(getPosts(data))
+            // // socket.off("post");
+            // setPost("")
+            // setIsLoaded(false)
+            // // setEmmited(false)
+            // setPostInput(false)
+            // setPostField(false)
+
+
+
+            dispatch(getPosts(msg))
+            socket.off('post_with_images')
+            setPost("")
+            setSelectedFile([])
+            setIsLoaded(false)
+            setPostField(false)
+            // setIsLoading(false)
+            setPostInput(false)
+            // setEmmited(false)
+
+            setTimeout(() => {
+                removeLoader()
+              }, 1000);
+
+
+
+        })
+        // }
+    }, [emmited, comment])
     return loading && profile == null ? (
         <LoadingSpinner />
     ) : (
@@ -74,26 +376,28 @@ const Dashboard = ({ getCurrentProfile, getCurrentPost, post: { posts, comments,
                     <SideBar />
 
                     {/* contents */}
-                    <div className="main_content">
-                      
-                       <Header />
+                    {/* <div className="main_content"> */}
+
+                        {/* <Header /> */}
 
                         <div className="main_content_inner">
                             <div className="uk-grid" uk-grid>
                                 <div className="uk-width-2-3@m fead-area">
-                                
-                                <Story />
+
+                                    <Story socket={socket} user={user} />
 
                                     <div className="post-newer mt-lg-2">
                                         {/* <div className="post-new" uk-toggle="target: body ; cls: post-focus"> */}
-                                        <InputField user={user} profile={profile}/>
-                                      
+                                        <InputField value={post} onChange={handleChange} isLoaded={isLoaded} user={user} socket={socket} profile={profile} />
+
                                         {/* : ''} */}
                                     </div>
 
                                     {/* <div className="post"> */}
+                                    {/* <PostItem socket={socket} post={posts} commentLikes={comments} profile={user} postId={post.file_id} /> */}
+
                                     {posts.length > 0 ? posts.map((post, key) => (
-                                        <PostItem key={post.file_id} post={post} commentLikes={comments} profile={user} postId={post.file_id} />
+                                        <PostItem key={key} socket={socket} post={post} likes={post.likes} commentLikes={comments} profile={user} postId={post.file_id} />
                                     )) :
 
                                         feedLoader ? <LoadingSpinner /> :
@@ -298,6 +602,8 @@ const Dashboard = ({ getCurrentProfile, getCurrentPost, post: { posts, comments,
                                                         erat
                       volutpat.<strong> David !</strong> </p>
                                                     </div>
+
+
                                                     <div className="uk-text-small">
                                                         <a href="#" className="text-danger mr-1"> <i className="uil-heart" /> Love
                     </a>
@@ -539,481 +845,164 @@ const Dashboard = ({ getCurrentProfile, getCurrentPost, post: { posts, comments,
                                 */}
                                 </div>
 
-                                <RightSideBar />
+                                <RightSideBar user={user} profile={profile} friendRequests={profile.friendRequests} friendsList={profile.friendsList} socket={socket} />
 
                             </div>
                         </div>
                     </div>
-                    {/* Chat sidebar */}
-                    <a className="chat-plus-btn" href="#sidebar-chat" uk-toggle>
-                        <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24">
-                            <path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
-                        </svg>
-                        {/*  Chat */}
-                    </a>
-                    <div id="sidebar-chat" className="sidebar-chat px-3" uk-offcanvas="flip: true; overlay: true">
-                        <div className="uk-offcanvas-bar">
-                            <div className="sidebar-chat-head mb-2">
-                                <div className="btn-actions">
-                                    <a href="#" uk-tooltip="title: Search ;offset:7" uk-toggle="target: .sidebar-chat-search; animation: uk-animation-slide-top-small"> <i className="icon-feather-search" /> </a>
-                                    <a href="#" uk-tooltip="title: settings ;offset:7"> <i className="icon-feather-settings" /> </a>
-                                    <a href="#"> <i className="uil-ellipsis-v" /> </a>
-                                    <a href="#" className="uk-hidden@s"> <button className="uk-offcanvas-close uk-close" type="button" uk-close> </button> </a>
+
+                    <Online online={online} user={user}/>
+                    {/* {chat &&
+                        <div id="sidebar-chat" className="sidebar-chat px-3 uk-offcanvas uk-offcanvas-overlay uk-open" uk-offcanvas="flip: true; overlay: true" style={{ display: 'block', zIndex: "50" }}>
+                            <div className="uk-offcanvas-bar uk-offcanvas-bar-animation uk-offcanvas-slide" style={{ left: '76%' }}>
+                                <div className="sidebar-chat-head mb-2">
+                                    <div className="btn-actions">
+                                        <a href="#" uk-tooltip="title: Search ;offset:7" uk-toggle="target: .sidebar-chat-search; animation: uk-animation-slide-top-small" title aria-expanded="false"> <i className="icon-feather-search" /> </a>
+                                        <a href="#" uk-tooltip="title: settings ;offset:7" title aria-expanded="false"> <i className="icon-feather-settings" /> </a>
+                                        <a href="#"> <i className="uil-ellipsis-v" /> </a>
+                                        <a href="#" className="uk-hidden@s"> <button className="uk-offcanvas-close uk-close uk-icon" type="button" uk-close> <svg width={14} height={14} viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" data-svg="close-icon"><line fill="none" stroke="#000" strokeWidth="1.1" x1={1} y1={1} x2={13} y2={13} /><line fill="none" stroke="#000" strokeWidth="1.1" x1={13} y1={1} x2={1} y2={13} /></svg></button> </a>
+                                    </div>
+                                    <h2> Chats </h2>
                                 </div>
-                                <h2> Chats </h2>
-                            </div>
-                            <div className="sidebar-chat-search" hidden>
-                                <input type="text" className="uk-input" placeholder="Search in Messages" />
-                                <span className="btn-close" uk-toggle="target: .sidebar-chat-search; animation: uk-animation-slide-top-small"> <i className="icon-feather-x" /> </span>
-                            </div>
-                            <ul className="uk-child-width-expand sidebar-chat-tabs" uk-tab>
-                                <li className="uk-active"><a href="#">Users</a></li>
-                                <li><a href="#">Groups</a></li>
-                            </ul>
-                            <a href="#">
-                                <div className="contact-list">
-                                    <div className="contact-list-media"> <img src="assets/images/avatars/avatar-2.jpg" alt />
-                                        <span className="online-dot" /> </div>
-                                    <h5> James Lewis </h5>
+                                <div className="sidebar-chat-search  " aria-hidden="false" style={{}}>
+                                    <input type="text" className="uk-input" placeholder="Search in Messages" />
+                                    <span className="btn-close" uk-toggle="target: .sidebar-chat-search; animation: uk-animation-slide-top-small"> <i className="icon-feather-x" /> </span>
                                 </div>
-                            </a>
-                            <a href="#">
-                                <div className="contact-list">
-                                    <div className="contact-list-media"> <img src="assets/images/avatars/avatar-1.jpg" alt />
-                                        <span className="online-dot" /> </div>
-                                    <h5> Erica Jones </h5>
-                                </div>
-                            </a>
-                            <a href="#">
-                                <div className="contact-list">
-                                    <div className="contact-list-media"> <img src="assets/images/avatars/avatar-7.jpg" alt />
-                                        <span className="offline-dot" /> </div>
-                                    <h5> Stella Johnson </h5>
-                                </div>
-                            </a>
-                            <a href="#">
-                                <div className="contact-list">
-                                    <div className="contact-list-media"> <img src="assets/images/avatars/avatar-5.jpg" alt />
-                                        <span className="offline-dot" /> </div>
-                                    <h5> Alex Dolgove </h5>
-                                </div>
-                            </a>
-                            <a href="#">
-                                <div className="contact-list">
-                                    <div className="contact-list-media"> <img src="assets/images/avatars/avatar-2.jpg" alt />
-                                        <span className="online-dot" /> </div>
-                                    <h5> James Lewis </h5>
-                                </div>
-                            </a>
-                            <a href="#">
-                                <div className="contact-list">
-                                    <div className="contact-list-media"> <img src="assets/images/avatars/avatar-4.jpg" alt />
-                                        <span className="online-dot" /> </div>
-                                    <h5> Erica Jones </h5>
-                                </div>
-                            </a>
-                            <a href="#">
-                                <div className="contact-list">
-                                    <div className="contact-list-media"> <img src="assets/images/avatars/avatar-3.jpg" alt />
-                                        <span className="offline-dot" /> </div>
-                                    <h5> Stella Johnson </h5>
-                                </div>
-                            </a>
-                            <a href="#">
-                                <div className="contact-list">
-                                    <div className="contact-list-media"> <img src="assets/images/avatars/avatar-5.jpg" alt />
-                                        <span className="offline-dot" /> </div>
-                                    <h5> Alex Dolgove </h5>
-                                </div>
-                            </a>
-                            <a href="#">
-                                <div className="contact-list">
-                                    <div className="contact-list-media"> <img src="assets/images/avatars/avatar-2.jpg" alt />
-                                        <span className="online-dot" /> </div>
-                                    <h5> James Lewis </h5>
-                                </div>
-                            </a>
-                            <a href="#">
-                                <div className="contact-list">
-                                    <div className="contact-list-media"> <img src="assets/images/avatars/avatar-4.jpg" alt />
-                                        <span className="online-dot" /> </div>
-                                    <h5> Erica Jones </h5>
-                                </div>
-                            </a>
-                            <a href="#">
-                                <div className="contact-list">
-                                    <div className="contact-list-media"> <img src="assets/images/avatars/avatar-3.jpg" alt />
-                                        <span className="offline-dot" /> </div>
-                                    <h5> Stella Johnson </h5>
-                                </div>
-                            </a>
-                            <a href="#">
-                                <div className="contact-list">
-                                    <div className="contact-list-media"> <img src="assets/images/avatars/avatar-5.jpg" alt />
-                                        <span className="offline-dot" /> </div>
-                                    <h5> Alex Dolgove </h5>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div className="story-pop uk-animation-slide-bottom-small">
-                        <div className="story-side uk-width-1-4@s">
-                            <div className="uk-flex uk-flex-between uk-flex-middle mb-2">
-                                <h2 className="mb-0" style={{ fontWeight: 700 }}>All Story</h2>
-                                <a href="#" className="text-primary"> Setting</a>
-                            </div>
-                            <div className="story-side-innr" data-simplebar>
-                                <h4 className="mb-1"> Your Story</h4>
-                                <ul className="story-side-list">
-                                    <li>
-                                        <a href="#">
-                                            <div className="story-user-media">
-                                                <img src="assets/images/avatars/avatar-1.jpg" alt />
-                                            </div>
-                                            <div className="story-user-innr">
-                                                <h5> Stella Johnson </h5>
-                                                <p> Share a photo or video</p>
-                                            </div>
-                                            <div className="add-story-btn">
-                                                <i className="uil-plus" />
-                                            </div>
-                                        </a>
-                                    </li>
+                                <ul className="uk-child-width-expand sidebar-chat-tabs uk-tab" uk-tab>
+                                    <li className="uk-active"><a href="#">Users</a></li>
+                                    <li><a href="#">Groups</a></li>
                                 </ul>
-                                <div className="uk-flex uk-flex-between uk-flex-middle my-3">
-                                    <h4 className="m-0"> Friends Story</h4>
-                                    <a href="#" className="text-primary"> See all</a>
-                                </div>
-                                <ul className="story-side-list" uk-switcher="connect: #story-slider-switcher ; animation: uk-animation-slide-right-medium, uk-animation-slide-left-medium">
-                                    <li>
-                                        <a href="#">
-                                            <div className="story-user-media">
-                                                <img src="assets/images/avatars/avatar-1.jpg" alt />
-                                            </div>
-                                            <div className="story-user-innr">
-                                                <h5> James Lewis </h5>
-                                                <p> <span className="story-count"> 2 new </span> <span className="story-time-ago"> 4hr ago
-                  </span></p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div className="story-user-media">
-                                                <img src="assets/images/avatars/avatar-2.jpg" alt />
-                                            </div>
-                                            <div className="story-user-innr">
-                                                <h5> Stella Johnson </h5>
-                                                <p> <span className="story-count"> 3 new </span> <span className="story-time-ago"> 1hr ago
-                  </span></p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div className="story-user-media">
-                                                <img src="assets/images/avatars/avatar-4.jpg" alt />
-                                            </div>
-                                            <div className="story-user-innr">
-                                                <h5> Erica Jones </h5>
-                                                <p> <span className="story-count"> 2 new </span> <span className="story-time-ago"> 3hr ago
-                  </span></p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div className="story-user-media">
-                                                <img src="assets/images/avatars/avatar-7.jpg" alt />
-                                            </div>
-                                            <div className="story-user-innr">
-                                                <h5> Adrian Mohani </h5>
-                                                <p> <span className="story-count"> 1 new </span> <span className="story-time-ago"> 4hr ago
-                  </span></p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div className="story-user-media">
-                                                <img src="assets/images/avatars/avatar-5.jpg" alt />
-                                            </div>
-                                            <div className="story-user-innr">
-                                                <h5> Alex Dolgove </h5>
-                                                <p> <span className="story-count"> 3 new </span> <span className="story-time-ago"> 7hr ago
-                  </span></p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div className="story-user-media">
-                                                <img src="assets/images/avatars/avatar-1.jpg" alt />
-                                            </div>
-                                            <div className="story-user-innr">
-                                                <h5> Stella Johnson </h5>
-                                                <p> <span className="story-count"> 2 new </span> <span className="story-time-ago"> 8hr ago
-                  </span></p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div className="story-user-media">
-                                                <img src="assets/images/avatars/avatar-2.jpg" alt />
-                                            </div>
-                                            <div className="story-user-innr">
-                                                <h5> Erica Jones </h5>
-                                                <p> <span className="story-count"> 3 new </span> <span className="story-time-ago"> 10hr ago
-                  </span></p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div className="story-user-media">
-                                                <img src="assets/images/avatars/avatar-5.jpg" alt />
-                                            </div>
-                                            <div className="story-user-innr">
-                                                <h5> Alex Dolgove </h5>
-                                                <p> <span className="story-count"> 3 new </span> <span className="story-time-ago"> 14hr ago
-                  </span></p>
-                                            </div>
-                                        </a>
-                                    </li>
-                                </ul>
+                                <a href="#">
+                                    <div className="contact-list">
+                                        <div className="contact-list-media"> <img src="assets/images/avatars/avatar-2.jpg" alt />
+                                            <span className="online-dot" /> </div>
+                                        <h5> James Lewis </h5>
+                                    </div>
+                                </a>
+                                <a href="#">
+                                    <div className="contact-list">
+                                        <div className="contact-list-media"> <img src="assets/images/avatars/avatar-1.jpg" alt />
+                                            <span className="online-dot" /> </div>
+                                        <h5> Erica Jones </h5>
+                                    </div>
+                                </a>
+                                <a href="#">
+                                    <div className="contact-list">
+                                        <div className="contact-list-media"> <img src="assets/images/avatars/avatar-7.jpg" alt />
+                                            <span className="offline-dot" /> </div>
+                                        <h5> Stella Johnson </h5>
+                                    </div>
+                                </a>
+                                <a href="#">
+                                    <div className="contact-list">
+                                        <div className="contact-list-media"> <img src="assets/images/avatars/avatar-5.jpg" alt />
+                                            <span className="offline-dot" /> </div>
+                                        <h5> Alex Dolgove </h5>
+                                    </div>
+                                </a>
+                                <a href="#">
+                                    <div className="contact-list">
+                                        <div className="contact-list-media"> <img src="assets/images/avatars/avatar-2.jpg" alt />
+                                            <span className="online-dot" /> </div>
+                                        <h5> James Lewis </h5>
+                                    </div>
+                                </a>
+                                <a href="#">
+                                    <div className="contact-list">
+                                        <div className="contact-list-media"> <img src="assets/images/avatars/avatar-4.jpg" alt />
+                                            <span className="online-dot" /> </div>
+                                        <h5> Erica Jones </h5>
+                                    </div>
+                                </a>
+                                <a href="#">
+                                    <div className="contact-list">
+                                        <div className="contact-list-media"> <img src="assets/images/avatars/avatar-3.jpg" alt />
+                                            <span className="offline-dot" /> </div>
+                                        <h5> Stella Johnson </h5>
+                                    </div>
+                                </a>
+                                <a href="#">
+                                    <div className="contact-list">
+                                        <div className="contact-list-media"> <img src="assets/images/avatars/avatar-5.jpg" alt />
+                                            <span className="offline-dot" /> </div>
+                                        <h5> Alex Dolgove </h5>
+                                    </div>
+                                </a>
+                                <a href="#">
+                                    <div className="contact-list">
+                                        <div className="contact-list-media"> <img src="assets/images/avatars/avatar-2.jpg" alt />
+                                            <span className="online-dot" /> </div>
+                                        <h5> James Lewis </h5>
+                                    </div>
+                                </a>
+                                <a href="#">
+                                    <div className="contact-list">
+                                        <div className="contact-list-media"> <img src="assets/images/avatars/avatar-4.jpg" alt />
+                                            <span className="online-dot" /> </div>
+                                        <h5> Erica Jones </h5>
+                                    </div>
+                                </a>
+                                <a href="#">
+                                    <div className="contact-list">
+                                        <div className="contact-list-media"> <img src="assets/images/avatars/avatar-3.jpg" alt />
+                                            <span className="offline-dot" /> </div>
+                                        <h5> Stella Johnson </h5>
+                                    </div>
+                                </a>
+                                <a href="#">
+                                    <div className="contact-list">
+                                        <div className="contact-list-media"> <img src="assets/images/avatars/avatar-5.jpg" alt />
+                                            <span className="offline-dot" /> </div>
+                                        <h5> Alex Dolgove </h5>
+                                    </div>
+                                </a>
                             </div>
                         </div>
-                        <div className="story-content">
-                            {/* close button*/}
-                            <span className="story-btn-close" uk-toggle="target: body ; cls: is-open" uk-tooltip="title:Close story ; pos: left " />
-                            <div className="story-content-innr">
-                                <ul id="story-slider-switcher" className="uk-switcher">
-                                    <li>
-                                        <a href="#" uk-switcher-item="previous" className="uk-position-center-left-out uk-position-medium slidenav-prev" />
-                                        <a href="#" uk-switcher-item="next" className="uk-position-center-right-out uk-position-medium slidenav-next" />
-                                        <div className="uk-position-relative uk-visible-toggle" uk-slider>
-                                            {/* navigation */}
-                                            <ul className="uk-slider-nav uk-dotnav story-slider-nav" />
-                                            {/* Story posted image */}
-                                            <ul className="uk-slider-items uk-child-width-1-1 story-slider">
-                                                <li>
-                                                    <div className="story-slider-image uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left">
-                                                        <img src="assets/images/post/img-1.jpg" alt />
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div className="story-slider-image uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left">
-                                                        <img src="assets/images/avatars/avatar-lg-1.jpg" alt />
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        {/* slider navigation */}
-                                        <a href="#" uk-switcher-item="previous" className="uk-position-center-left-out uk-position-medium slidenav-prev" />
-                                        <a href="#" uk-switcher-item="next" className="uk-position-center-right-out uk-position-medium slidenav-next" />
-                                        <div className="uk-position-relative uk-visible-toggle" uk-slider>
-                                            {/* navigation */}
-                                            <ul className="uk-slider-nav uk-dotnav story-slider-nav" />
-                                            {/* Story posted image */}
-                                            <ul className="uk-slider-items uk-child-width-1-1 story-slider">
-                                                <li>
-                                                    <div className="story-slider-image">
-                                                        <img src="assets/images/post/img-3.jpg" alt />
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div className="story-slider-image">
-                                                        <img src="assets/images/avatars/avatar-lg-3.jpg" alt />
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div className="story-slider-image">
-                                                        <img src="assets/images/avatars/avatar-lg-2.jpg" alt />
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        {/* slider navigation */}
-                                        <a href="#" uk-switcher-item="previous" className="uk-position-center-left-out uk-position-medium slidenav-prev" />
-                                        <a href="#" uk-switcher-item="next" className="uk-position-center-right-out uk-position-medium slidenav-next" />
-                                        <div className="uk-position-relative uk-visible-toggle" uk-slider>
-                                            {/* navigation */}
-                                            <ul className="uk-slider-nav uk-dotnav story-slider-nav" />
-                                            {/* Story posted image */}
-                                            <ul className="uk-slider-items uk-child-width-1-1 story-slider">
-                                                <li>
-                                                    <div className="story-slider-image uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left">
-                                                        <img src="assets/images/avatars/avatar-lg-4.jpg" alt />
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        {/* slider navigation */}
-                                        <a href="#" uk-switcher-item="previous" className="uk-position-center-left-out uk-position-medium slidenav-prev" />
-                                        <a href="#" uk-switcher-item="next" className="uk-position-center-right-out uk-position-medium slidenav-next" />
-                                        <div className="uk-position-relative uk-visible-toggle" uk-slider>
-                                            {/* navigation */}
-                                            <ul className="uk-slider-nav uk-dotnav story-slider-nav" />
-                                            {/* Story posted image */}
-                                            <ul className="uk-slider-items uk-child-width-1-1 story-slider">
-                                                <li>
-                                                    <div className="story-slider-image uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left">
-                                                        <img src="assets/images/avatars/avatar-lg-4.jpg" alt />
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        {/* slider navigation */}
-                                        <a href="#" uk-switcher-item="previous" className="uk-position-center-left-out uk-position-medium slidenav-prev" />
-                                        <a href="#" uk-switcher-item="next" className="uk-position-center-right-out uk-position-medium slidenav-next" />
-                                        <div className="uk-position-relative uk-visible-toggle" uk-slider>
-                                            {/* navigation */}
-                                            <ul className="uk-slider-nav uk-dotnav story-slider-nav" />
-                                            {/* Story posted image */}
-                                            <ul className="uk-slider-items uk-child-width-1-1 story-slider">
-                                                <li>
-                                                    <div className="story-slider-image uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left">
-                                                        <img src="assets/images/avatars/avatar-lg-4.jpg" alt />
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        {/* slider navigation */}
-                                        <a href="#" uk-switcher-item="previous" className="uk-position-center-left-out uk-position-medium slidenav-prev" />
-                                        <a href="#" uk-switcher-item="next" className="uk-position-center-right-out uk-position-medium slidenav-next" />
-                                        <div className="uk-position-relative uk-visible-toggle" uk-slider>
-                                            {/* navigation */}
-                                            <ul className="uk-slider-nav uk-dotnav story-slider-nav" />
-                                            {/* Story posted image */}
-                                            <ul className="uk-slider-items uk-child-width-1-1 story-slider">
-                                                <li>
-                                                    <div className="story-slider-image uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left">
-                                                        <img src="assets/images/avatars/avatar-lg-4.jpg" alt />
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        {/* slider navigation */}
-                                        <a href="#" uk-switcher-item="previous" className="uk-position-center-left-out uk-position-medium slidenav-prev" />
-                                        <a href="#" uk-switcher-item="next" className="uk-position-center-right-out uk-position-medium slidenav-next" />
-                                        <div className="uk-position-relative uk-visible-toggle" uk-slider>
-                                            {/* navigation */}
-                                            <ul className="uk-slider-nav uk-dotnav story-slider-nav" />
-                                            {/* Story posted image */}
-                                            <ul className="uk-slider-items uk-child-width-1-1 story-slider">
-                                                <li>
-                                                    <div className="story-slider-image uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left">
-                                                        <img src="assets/images/avatars/avatar-lg-4.jpg" alt />
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        {/* slider navigation */}
-                                        <a href="#" uk-switcher-item="previous" className="uk-position-center-left-out uk-position-medium slidenav-prev" />
-                                        <a href="#" uk-switcher-item="next" className="uk-position-center-right-out uk-position-medium slidenav-next" />
-                                        <div className="uk-position-relative uk-visible-toggle" uk-slider>
-                                            {/* navigation */}
-                                            <ul className="uk-slider-nav uk-dotnav story-slider-nav" />
-                                            {/* Story posted image */}
-                                            <ul className="uk-slider-items uk-child-width-1-1 story-slider">
-                                                <li>
-                                                    <div className="story-slider-image uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left">
-                                                        <img src="assets/images/avatars/avatar-lg-4.jpg" alt />
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        {/* slider navigation */}
-                                        <a href="#" uk-switcher-item="previous" className="uk-position-center-left-out uk-position-medium slidenav-prev" />
-                                        <a href="#" uk-switcher-item="next" className="uk-position-center-right-out uk-position-medium slidenav-next" />
-                                        <div className="uk-position-relative uk-visible-toggle" uk-slider>
-                                            {/* navigation */}
-                                            <ul className="uk-slider-nav uk-dotnav story-slider-nav" />
-                                            {/* Story posted image */}
-                                            <ul className="uk-slider-items uk-child-width-1-1 story-slider">
-                                                <li>
-                                                    <div className="story-slider-image uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left">
-                                                        <img src="assets/images/avatars/avatar-lg-4.jpg" alt />
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        {/* slider navigation */}
-                                        <a href="#" uk-switcher-item="previous" className="uk-position-center-left-out uk-position-medium slidenav-prev" />
-                                        <a href="#" uk-switcher-item="next" className="uk-position-center-right-out uk-position-medium slidenav-next" />
-                                        <div className="uk-position-relative uk-visible-toggle" uk-slider>
-                                            {/* navigation */}
-                                            <ul className="uk-slider-nav uk-dotnav story-slider-nav" />
-                                            {/* Story posted image */}
-                                            <ul className="uk-slider-items uk-child-width-1-1 story-slider">
-                                                <li>
-                                                    <div className="story-slider-image uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left">
-                                                        <img src="assets/images/avatars/avatar-lg-4.jpg" alt />
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        {/* slider navigation */}
-                                        <a href="#" uk-switcher-item="previous" className="uk-position-center-left-out uk-position-medium slidenav-prev" />
-                                        <a href="#" uk-switcher-item="next" className="uk-position-center-right-out uk-position-medium slidenav-next" />
-                                        <div className="uk-position-relative uk-visible-toggle" uk-slider>
-                                            {/* navigation */}
-                                            <ul className="uk-slider-nav uk-dotnav story-slider-nav" />
-                                            {/* Story posted image */}
-                                            <ul className="uk-slider-items uk-child-width-1-1 story-slider">
-                                                <li>
-                                                    <div className="story-slider-image uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left">
-                                                        <img src="assets/images/avatars/avatar-lg-4.jpg" alt />
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    } */}
+
+                    <AllStories socket={socket} user={user} />
+                {/* </div> */}
 
             </Fragment>
         )
 }
 
 Dashboard.PropTypes = {
+    loadUser: PropTypes.func.isRequired,
+    addStory: PropTypes.func.isRequired,
+    getStory: PropTypes.func.isRequired,
+    confirmFriend: PropTypes.func.isRequired,
+    loader: PropTypes.func.isRequired,
+    removeLoader: PropTypes.func.isRequired,
+
     getCurrentProfile: PropTypes.func.isRequired,
+    addNotification: PropTypes.func.isRequired,
+    fetchNotification: PropTypes.func.isRequired,
+
+    getProfiles: PropTypes.func.isRequired,
     getPosts: PropTypes.func.isRequired,
     getCurrentPost: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
     post: PropTypes.object.isRequired,
-    profile: PropTypes.object.isRequired
+    profile: PropTypes.object.isRequired,
+    addComment: PropTypes.func.isRequired,
+    addLike: PropTypes.func.isRequired,
+    addCommentLike: PropTypes.func.isRequired,
+    removeLike: PropTypes.func.isRequired,
+    removeCommentLike: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => ({
     auth: state.auth,
     post: state.post,
-    profile: state.profile
+    profile: state.profile,
+    online: state.online,
+    notification:state.notification,
+    loader: state.loader
 })
 
 
-export default connect(mapStateToProps, { getPosts, getCurrentPost, getCurrentProfile })(Dashboard);
+export default connect(mapStateToProps, { getProfiles, addNotification, fetchNotifications, removeLoader,
+    loadUser, loader, getPosts, getCurrentPost, getCurrentProfile,
+    addComment, addLike, removeLike, addComment, addCommentLike, getStory, confirmFriend, removeCommentLike, addStory
+})(Dashboard);

@@ -1,13 +1,31 @@
 import axios from 'axios';
 import { POST, GET_POST, ADD_LIKE, ADD_COMMENT, REMOVE_LIKE, REMOVE_COMMENT_LIKE, ADD_COMMENT_LIKE, POST_ERROR } from './types';
 import { setAlert } from './alert';
+import { loader } from './loader';
 
-export const getPosts = (data) => dispatch => {
+export const getPosts = (data) => (dispatch, getState) => {
+    const state = getState()
        return {
             type:POST,
-            payload: data
-       }
-   
+            payload: data,
+            profile: state.profile
+        } 
+}
+
+
+export const addComment = (data) => dispatch => {
+    // console.log({data})
+//     dispatch({
+//         type:ADD_COMMENT,
+//         payload: data
+//    })
+  return {
+        dispatch: dispatch,
+        type:ADD_COMMENT,
+        payload: data
+    }
+  
+
 }
 
 export const addLike = (data) => dispatch => {
@@ -19,34 +37,30 @@ export const addLike = (data) => dispatch => {
 }
 
 export const addCommentLike = (data) => dispatch => {
-    dispatch({
-         type:ADD_COMMENT_LIKE,
-         payload: data
-    })
+    return {
+        type:ADD_COMMENT_LIKE,
+        payload: data
+   }
+    // dispatch({
+    //      type:ADD_COMMENT_LIKE,
+    //      payload: data
+    // })
 }
 
 
 export const removeCommentLike = (data) => dispatch => {
-    dispatch({
-         type:REMOVE_COMMENT_LIKE,
-         payload: data
-    })
-}
-
-
-
-export const addComment = (data) => dispatch => {
-    console.log({data})
-    dispatch({
-        type:ADD_COMMENT,
+    return {
+        type:REMOVE_COMMENT_LIKE,
         payload: data
-    })
-    // return {
-    //      type:ADD_COMMENT,
+   }
+    // dispatch({
+    //      type:REMOVE_COMMENT_LIKE,
     //      payload: data
-    // }
-
+    // })
 }
+
+
+
 
 export const removeLike = (data) => dispatch => {
 
@@ -97,17 +111,17 @@ export const getCurrentPost = () => async dispatch => {
 //     }
 // }
 // export const createProfile = (formData, history, edit=false) => async dispatch => {
-//     const config = {
-//         headers: {
-//         'content-type': 'application/json'
-//         }
-//     }
-//     try{
-//         const res = await axios.post('http://localhost:4000/api/v1/profile', formData, config);
-//         dispatch({
-//             type:GET_PROFILE,
-//             payload: res.data
-//         })
+    // const config = {
+    //     headers: {
+    //     'content-type': 'application/json'
+    //     }
+    // }
+    // try{
+    //     const res = await axios.post('http://localhost:4000/api/v1/profile', formData, config);
+    //     dispatch({
+    //         type:GET_PROFILE,
+    //         payload: res.data
+    //     })
 //         dispatch (setAlert(edit ? 'profile updated' : 'profile created', 'success'));
 //             history.push('/dashboard');
 //     } catch(err){

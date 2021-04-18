@@ -1,20 +1,27 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import { useDispatch } from 'react-redux';
+import { loader } from '../../actions/loader';
 import PropTypes from 'prop-types';
+import { NavLink, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import logo from '../../images/assets/images/logo.png';
+import logoLight from '../../images/assets/images/logo-light.png';
 import io from "socket.io-client";
 import { addLike, removeLike, addComment, addCommentLike, removeCommentLike } from '../../actions/post';
 import LoadingSpinner from '../layout/spinner';
+import { showLoading, hideLoading } from 'react-redux-loading-bar';
 
 
-const sideBar = () => {
+
+const sideBar = ({loader}) => {
+    const dispatch = useDispatch()
     return (
         <Fragment>
             <div className="main_sidebar">
                 <div className="side-overlay" uk-toggle="target: #wrapper ; cls: collapse-sidebar mobile-visible" />
                 <div className="sidebar-header">
                     <div id="logo">
-                        <a href="feeds.html"> <img src="assets/images/logo-light.png" alt /></a>
+                        <a href="feeds.html"> <img src={logoLight} alt /></a>
                     </div>
                     <span className="btn-close" uk-toggle="target: #wrapper ; cls: collapse-sidebar mobile-visible" />
                 </div>
@@ -22,14 +29,43 @@ const sideBar = () => {
                     <div className="sidebar_innr" data-simplebar>
                         <div className="sections">
                             <ul>
-                                <li className="active">
+                              <li>
+                              {/* nClick={loader()} */}
+                                <Link to="/dashboard" onClick={e=>loader()}  activeClassName="superactive">
+                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24">
+                                            <path fill="#047cac" d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" />
+                                        </svg>
+                                              News Feed
+                                </Link>
+                                </li>
+
+                                <li>
+                                <Link to="/profile" onClick={e=>loader()} activeClassName="superactive">
+                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24">
+                                            <path fill="#8d73cc" d="M20 22H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1zm-1-2V4H5v16h14zM7 6h4v4H7V6zm0 6h10v2H7v-2zm0 4h10v2H7v-2zm6-9h4v2h-4V7z">
+                                            </path>
+                                        </svg>Profile
+                                </Link>
+                                </li>
+
+                                <li>
+                                <Link to="/findFriends" onClick={e=>loader()} activeClassName="superactive">
+                                <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24">
+                                            <path fill="#b2c17c" d="M15.5,12C18,12 20,14 20,16.5C20,17.38 19.75,18.21 19.31,18.9L22.39,22L21,23.39L17.88,20.32C17.19,20.75 16.37,21 15.5,21C13,21 11,19 11,16.5C11,14 13,12 15.5,12M15.5,14A2.5,2.5 0 0,0 13,16.5A2.5,2.5 0 0,0 15.5,19A2.5,2.5 0 0,0 18,16.5A2.5,2.5 0 0,0 15.5,14M10,4A4,4 0 0,1 14,8C14,8.91 13.69,9.75 13.18,10.43C12.32,10.75 11.55,11.26 10.91,11.9L10,12A4,4 0 0,1 6,8A4,4 0 0,1 10,4M2,20V18C2,15.88 5.31,14.14 9.5,14C9.18,14.78 9,15.62 9,16.5C9,17.79 9.38,19 10,20H2Z">
+                                            </path>
+                                        </svg>
+                                              Find Friends
+                                </Link>
+                                </li>
+
+                                {/* <li className="active">
                                     <a href="feeds.html">
                                         <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24">
                                             <path fill="#047cac" d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" />
                                         </svg>
                                               News Feed </a>
-                                </li>
-                                <li>
+                                </li> */}
+                                {/* <li>
                                     <a href="albums.html">
                                         <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24">
                                             <path fill="#8bc34a" d="M22,16V4A2,2 0 0,0 20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16M11,12L13.03,14.71L16,11L20,16H8M2,6V20A2,2 0 0,0 4,22H18V20H4V6">
@@ -142,21 +178,21 @@ const sideBar = () => {
                                             <path fill="#4caf50" d="M10,2H14A2,2 0 0,1 16,4V6H20A2,2 0 0,1 22,8V19A2,2 0 0,1 20,21H4C2.89,21 2,20.1 2,19V8C2,6.89 2.89,6 4,6H8V4C8,2.89 8.89,2 10,2M14,6V4H10V6H14Z">
                                             </path>
                                         </svg> Jobs </a>
-                                </li>
+                                </li> */}
                             </ul>
                         </div>
                         {/*  Optional Footer */}
-                        <div id="foot">
-                            <ul>
+                        {/* <div id="foot">
+                             <ul>
                                 <li> <a href="page-term.html"> About Us </a></li>
                                 <li> <a href="page-setting.html"> Setting </a></li>
                                 <li> <a href="page-privacy.html"> Privacy Policy </a></li>
                                 <li> <a href="page-term.html"> Terms - Conditions </a></li>
-                            </ul>
+                            </ul> 
                             <div className="foot-content">
-                                <p>© 2020 <strong>Simplest</strong>. All Rights Reserved. </p>
+                                <p>© 2021 <strong>DevBook</strong>. All Rights Reserved. </p>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
@@ -166,4 +202,20 @@ const sideBar = () => {
 
 }
 
-export default sideBar;
+sideBar.PropTypes = {
+    loader: PropTypes.func.isRequired,
+    // register: PropTypes.func.isRequired,
+    // isAuthenticated: PropTypes.bool
+
+};
+
+const mapStateToProps = state => ({
+    // isAuthenticated: state.auth.isAuthenticated,
+    loader:state.loader
+
+});
+
+export default connect(mapStateToProps, { loader })(sideBar);
+
+
+// export default sideBar;

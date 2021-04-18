@@ -72,7 +72,7 @@ export const loadUser = () => async dispatch => {
     } catch (err) {
         const errors = err.response.data.error
         if (errors) {
-            dispatch(setAlert(errors, 'error'))
+            // dispatch(setAlert(errors, 'error'))
         }
         dispatch({
             type: AUTH_ERROR

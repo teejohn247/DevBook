@@ -23,7 +23,27 @@ export const GET_PROFILES = 'GET_PROFILES';
 export const PROFILE_ERROR = 'PROFILE_ERROR';
 export const EDIT_PROFILE = 'EDIT_PROFILE';
 export const ADD_COMMENT_LIKE= 'ADD_COMMENT_LIKE';
+export const ADD_FRIEND= 'ADD_FRIEND';
+export const REJECT_FRIEND= 'REJECT_FRIEND';
+export const ACCEPT_FRIEND= 'ACCEPT_FRIEND';
+export const SEARCH_USER= 'SEARCH_USER';
+export const SET_LOADER= 'SET_LOADER';
+export const REMOVE_LOADER= 'REMOVE_LOADER';
 export const REMOVE_COMMENT_LIKE= 'REMOVE_COMMENT_LIKE';
+export const ADD_STORY= 'ADD_STORY';
+export const VIEW_STORY= 'VIEW_STORY';
+export const ONLINE= 'ONLINE';
+export const FETCH_CHATS= 'FETCH_CHATS';
+export const CHAT= 'CHAT';
+export const NOTIFICATION= 'NOTIFICATION';
+export const FETCH_NOTIFICATIONS = 'FETCH_NOTIFICATIONS';
+export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION';
+
+
+
+
+
+
 
 
 
