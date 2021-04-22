@@ -48,16 +48,17 @@ console.log("ppp", profile)
        
     // }, [profile.friendsList])
 
-    // useEffect(() => {
-    //     // var arr2 = []
-    //     // console.log("friendsList", profile.friendsList)
-    //     // if (profile.friendsList) {
-    //         const fetchData = async () => {
-    //             await getCurrentProfile()
-    //         }
-    //         fetchData();
-    //     // }
-    // }, [profile])
+    useEffect(() => {
+        // var arr2 = []
+        // console.log("friendsList", profile.friendsList)
+        // if (profile.friendsList) {
+            const fetchData = async () => {
+                await getCurrentProfile()
+                await getFriendsProfiles()
+            }
+            fetchData();
+        // }
+    }, [])
 
 
 
@@ -85,7 +86,7 @@ console.log("ppp", profile)
                                                 profile.friendsList.map(pr => conf.push(pr.user))
 
                                                 let use = prof.user
-                                                return <Find key={key} socket={socket} req={arr.includes(use)} confirmed={conf.includes(use)} user={user} profil={profile} prof={prof} />
+                                                return <Find key={key} socket={socket} req={arr.includes(prof.user)} confirmed={conf.includes(prof.user)} user={user} profil={profile} prof={prof} />
                                             }
                                             )}
                                         </div>

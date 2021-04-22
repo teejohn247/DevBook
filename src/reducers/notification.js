@@ -22,8 +22,9 @@ export default function (state = initialState, action) {
             localStorage.setItem('receiver', payload.receiver_id)
             return {
                 ...state,
-                notifications: [...state.notifications, (auth.user._id == payload.receiver_id) ? { ...payload } : {...state.notifications}],
-                totalNotifications: state.totalNotifications + 1,
+                notifications: [(auth.user._id == payload.receiver_id) ? { ...payload, ...state.notifications } : (auth.user._id == payload.sender  && payload.notificationType
+                ) ? { ...payload, ...state.notifications } : {...state.notifications}],
+                totalNotifications: ((auth.user._id == payload.receiver_id) || (auth.user._id == payload.sender && payload.notificationType)) && state.totalNotifications + 1,
                 loading: false
             }
         case FETCH_NOTIFICATIONS:

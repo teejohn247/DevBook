@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import io from "socket.io-client";
 // import { addFriend } from '../../actions/profile';
-import { getProfileById } from '../../actions/profile';
+// import { getProfileById } from '../../actions/profile';
+import { getCurrentProfile, getProfileById } from '../../actions/profile';
+
+
 import { BrowserRouter, useHistory, useParams } from 'react-router-dom';
 import { addFriend } from '../../actions/profile';
 import { setAlert } from '../../actions/alert';
@@ -22,7 +25,7 @@ const socket = io.connect('http://localhost:4000', { 'forceNew': true })
 
 
 
-const profile = ({ setAlert, getProfileById, profile: { profile }, friendRequests, user, addFriend, onClick }) => {
+const profile = ({ setAlert, getProfileById, getCurrentProfile, profile: { profile }, friendRequests, user, addFriend, onClick }) => {
 
 
 
@@ -48,6 +51,17 @@ const profile = ({ setAlert, getProfileById, profile: { profile }, friendRequest
     }
 
     useEffect(() => {
+        const fetchData = async () => {
+
+            await getProfileById(user_id)
+
+        }
+        fetchData()
+
+    }, [])
+
+    useEffect(() => {
+        
         var arr = []
         console.log({ friendRequests })
         if (friendRequests) {
@@ -365,7 +379,7 @@ profile.PropTypes = {
     getProfileById: PropTypes.func.isRequired,
     profile: PropTypes.object.isRequired,
     setAlert: PropTypes.func.isRequired,
-
+    getCurrentProfile: PropTypes.func.isRequired,
     addFriend: PropTypes.func.isRequired,
     user: PropTypes.object.isRequired
 }
@@ -374,5 +388,5 @@ const mapStateToProps = (state) => ({
     profile: state.profile,
     alert: state.alert,
 })
-export default connect(mapStateToProps, { getProfileById, addFriend, setAlert })(profile);
+export default connect(mapStateToProps, { getProfileById, getCurrentProfile, addFriend, setAlert })(profile);
 

@@ -14,7 +14,8 @@ import io from "socket.io-client";
 
 const socket = io.connect('http://localhost:4000', { 'forceNew': true })
 
-const Online = ({ chat, fetchChats, online: { onlineUsers }, user }) => {
+const Online = ({ chat, fetchChats, profiles, online: { onlineUsers }, user }) => {
+    console.log('hp',profiles)
     const [chats, setChats] = useState(false);
     const [userChat, setUserChat] = useState(false);
     // user._id, user.name, user.image
@@ -221,16 +222,18 @@ const Online = ({ chat, fetchChats, online: { onlineUsers }, user }) => {
                             <li className="uk-active"><a href="#">Users</a></li>
                             <li><a href="#">Groups</a></li>
                         </ul>
-                        {onlineUsers.map((users, i) => (
-                            user._id != users._id &&
-                            <span>
+                        {onlineUsers.map((users, i) => {
+                            let arr = [];
+                            profiles.friendsList.map(pr => arr.push(pr.user))
+                            return (user._id != users._id && arr.includes(users._id) &&
+                             <span>
                                 <div className="contact-list" onClick={e => handleUserChat(e, users._id, users.name, users.image)}>
                                     <div className="contact-list-media"> <img src={users.image} alt />
                                         <span className="online-dot" /> </div>
                                     <h5> {users.name} </h5>
                                 </div>
-                            </span>
-                        ))
+                            </span>)
+                        })
                         }
 
                         {/* <a href="#">

@@ -122,25 +122,25 @@ const Dashboard = ({getProfiles, addNotification, fetchNotifications, loadUser, 
 
 
     useEffect(() => {
-        // socket.on('connect', function () {
-        //     console.log('connected!')
-        // })
-        // loader(true)
-        // const fetchData = async () => {
-        //     // await loadUser()
-        //     await getCurrentProfile()
-        //     await getCurrentPost()
-        //     await getStory()
-        //     await getProfiles()
-        //     // await fetchNotifications()
+    //     // socket.on('connect', function () {
+    //     //     console.log('connected!')
+    //     // })
+    //     // loader(true)
+        const fetchData = async () => {
+            // await loadUser()
+            await getCurrentProfile()
+            // await getCurrentPost()
+            // await getStory()
+            // await getProfiles()
+            // await fetchNotifications()
 
-        //     // setUse(auth.user)
-        // }
+            // setUse(auth.user)
+        }
 
-        // fetchData();
-        // return () => {
-        //     socket.off('disconnect');
-        // };
+        fetchData();
+    //     // return () => {
+    //     //     socket.off('disconnect');
+    //     // };
 
     }, []);
 
@@ -210,7 +210,6 @@ const Dashboard = ({getProfiles, addNotification, fetchNotifications, loadUser, 
             } else if (data.like == "remove") {
                 console.log(data);
                 dispatch(removeLike(data))
-
             }
 
             // socket.off("like_post");
@@ -227,7 +226,6 @@ const Dashboard = ({getProfiles, addNotification, fetchNotifications, loadUser, 
 
 
                 dispatch(addCommentLike(data))
-                console.log('ggggg', user._id)
                 const state = store.getState()
                 let user = state.auth.user
                 console.log({user})
@@ -851,7 +849,7 @@ const Dashboard = ({getProfiles, addNotification, fetchNotifications, loadUser, 
                         </div>
                     </div>
 
-                    <Online online={online} user={user}/>
+                    <Online online={online} user={user} profiles={profile}/>
                     {/* {chat &&
                         <div id="sidebar-chat" className="sidebar-chat px-3 uk-offcanvas uk-offcanvas-overlay uk-open" uk-offcanvas="flip: true; overlay: true" style={{ display: 'block', zIndex: "50" }}>
                             <div className="uk-offcanvas-bar uk-offcanvas-bar-animation uk-offcanvas-slide" style={{ left: '76%' }}>

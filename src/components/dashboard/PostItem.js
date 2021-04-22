@@ -157,6 +157,7 @@ const PostItem = ({ getProfileById, socket, likes, post: { file_id, name, email,
             receiver_image: user_image,
             sender_name: user.name,
             receiver_name: name,
+            like: "add",
             notificationType: "likePost"
         })
         // setEmmited(true)
@@ -174,6 +175,8 @@ const PostItem = ({ getProfileById, socket, likes, post: { file_id, name, email,
         socket.emit('like_post', {
             file_id: file_id,
             _id: _id,
+            like: "remove"
+
         })
         // if(likeNumber == 0){
         // setLikeNumber(0)

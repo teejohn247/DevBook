@@ -28,7 +28,7 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 chat: [...state.chat, (auth.user._id == payload.user || auth.user._id == payload.receiver_id) && {...payload}],
-                chats: [...state.chat, (auth.user._id == payload.user || auth.user._id == payload.receiver_id) && {...payload}],
+                chats: [...state.chat, (auth.user._id == payload.user || auth.user._id == payload.receiver_id )&& {...payload}],
                 loading: false
             }
         default:

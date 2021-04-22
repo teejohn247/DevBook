@@ -16,8 +16,11 @@ const rightSideBar = ({ auth, profile, friendRequests, friendsList, user, socket
     const [request, setRequest] = useState(false);
 
 
+    const location = useLocation();
 
     useEffect(() => {
+        console.log("hhhhhhhh", location.pathname)
+
         if (friendRequests) {
             if (friendRequests.length > 0) {
                 setRequest(true)
@@ -31,7 +34,7 @@ const rightSideBar = ({ auth, profile, friendRequests, friendsList, user, socket
         // console.log(profile.profile.user == user._id)
 
 
-    }, [friendRequests])
+    }, [friendRequests, friendsList])
 
 
 
@@ -41,15 +44,15 @@ const rightSideBar = ({ auth, profile, friendRequests, friendsList, user, socket
         // user:data.sender, username: data.senderName, email: data.senderEmail
         // e, request.user, request.username, request.email
         console.log('ldkd', user)
-        console.log('confirm_friend', user_id, senderName, senderEmail)
+        console.log('confirm_friend', user_id, senderName, senderEmail, senderImage)
         socket.emit('confirm_friend', {
             sender: user_id,
             senderName: senderName,
             senderEmail: senderEmail,
             receiverName: user.name,
             receiverEmail: user.email,
-            // receiverEmail: user.email,
             senderImage: senderImage,
+            receiverImage: user.image,
             receiverImage: receiverImage,
             receiver: user._id,
         })
@@ -193,13 +196,14 @@ const rightSideBar = ({ auth, profile, friendRequests, friendsList, user, socket
                         <a className="uk-position-center-right-out uk-position-small uk-hidden-hover slidenav-next sl_pro_users_next" href="#" uk-slider-item="next" />
                     </div>
                 </div>
+
+                {location.pathname == "/dashboard" && 
                 <div className="sl_sidebar_sugs_title">Friends Requests
                                      <i className="icon-feather-rotate-cw" />
                 </div>
-
+               }
                 
-
-                {friendRequests ? friendRequests.map((request, i) => {
+                {location.pathname == "/dashboard" && friendRequests  ? friendRequests.map((request, i) => {
 
                     return <div key={i} className="sl_sidebar_sugs">
                         <div className="sl_sidebar_sugs_avatar">
@@ -222,6 +226,8 @@ const rightSideBar = ({ auth, profile, friendRequests, friendsList, user, socket
 
                 }) : ''
                 }
+                
+                
 
 
                 {/* <div className="sl_sidebar_sugs">
@@ -360,8 +366,7 @@ const rightSideBar = ({ auth, profile, friendRequests, friendsList, user, socket
                     </div>
                     <hr />
                     <ul className="list-inline">
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Blog</a></li>
+ 
                         <li><a href="#"> Privecy</a></li>
                         <li><a href="#">Contact Us</a></li>
                         <li><a href="#">Developers</a></li>

@@ -26,14 +26,11 @@ import { onlineFriends } from '../../actions/online';
 import { addLike, removeLike, addComment, addCommentLike, removeCommentLike } from '../../actions/post';
 import { addFriend, confirmFriend } from '../../actions/profile';
 import ReactDropDownAutoComplete from 'react-dropdown-autocomplete';
-
 import logo from '../../images/assets/images/logo.png';
 import logoLight from '../../images/assets/images/logo-light.png';
 import appsSvg from '../../images/assets/images/logo-light.png';
-
 import TopBarProgress from "react-topbar-progress-indicator";
-
-
+import {  addNotification } from '../../actions/notification';
 
 
 {/*  */ }
@@ -47,7 +44,7 @@ import TopBarProgress from "react-topbar-progress-indicator";
 const socket = io.connect('http://localhost:4000', { 'forceNew': true })
 
 
-const Header = ({ chat, logout, getProfiles, getFriendsProfiles, getStory, auth: { user }, addFriend, loader, removeLoader, loading: { pageLoading }, removeNotification, notification: { notifications, totalNotifications }, fetchNotifications, profile,  onlineFriends, loadUser, confirmFriend, getCurrentProfile, getCurrentPost }) => {
+const Header = ({ chat, logout, getProfiles, addNotification, getFriendsProfiles, getStory, auth: { user }, addFriend, loader, removeLoader, loading: { pageLoading }, removeNotification, notification: { notifications, totalNotifications }, fetchNotifications, profile,  onlineFriends, loadUser, confirmFriend, getCurrentProfile, getCurrentPost }) => {
     const dispatch = useDispatch();
     const [called, setCalled] = useState(false);
     const [value, setValue] = useState("");
@@ -74,6 +71,33 @@ const Header = ({ chat, logout, getProfiles, getFriendsProfiles, getStory, auth:
         },
         shadowBlur: 5
     });
+
+    var state = store.getState()
+    var user = state.auth.user
+
+    useEffect(() => {
+      
+
+        console.log("under", user)
+
+        if(user){
+
+        socket.emit('online_users', {
+            user_id: user._id,
+            user_image: user.image,
+            name: user.name,
+        })
+      }
+
+
+
+
+        socket.on('online_users', function (data) {
+            console.log("online_users", data);
+            dispatch(onlineFriends(data))
+        })
+       
+    }, [location]);
 
 
     function handleChange(event) {
@@ -126,6 +150,13 @@ const Header = ({ chat, logout, getProfiles, getFriendsProfiles, getStory, auth:
     // },[])
     const location = useLocation();
 
+    // useEffect(() => {
+    //     effect
+    //     return () => {
+    //         cleanup
+    //     };
+    // }, []);
+
 
     useEffect(() => {
         // (async function anyNameFunction() {
@@ -133,6 +164,8 @@ const Header = ({ chat, logout, getProfiles, getFriendsProfiles, getStory, auth:
         //     await loadUser()
 
         //   })()
+
+       
 
         const fetchData = async () => {
 
@@ -142,7 +175,7 @@ const Header = ({ chat, logout, getProfiles, getFriendsProfiles, getStory, auth:
             await getCurrentProfile()
             await getCurrentPost()
             await getStory()
-            await getProfiles()
+            // await getProfiles()
             await getFriendsProfiles()
             console.log('ffrost', user)
 
@@ -181,24 +214,7 @@ const Header = ({ chat, logout, getProfiles, getFriendsProfiles, getStory, auth:
 
             })
 
-            const state = store.getState()
-            let user = state.auth.user
-    
-            console.log("under", user)
-    
-            socket.emit('online_users', {
-                user_id: user._id,
-                user_image: user.image,
-                name: user.name,
-            })
-
-
-
-
-            socket.on('online_users', function (data) {
-                console.log("online_users", data);
-                dispatch(onlineFriends(data))
-            })
+          
 
             socket.on('chat', function (data) {
                 dispatch(chat(data))
@@ -207,6 +223,24 @@ const Header = ({ chat, logout, getProfiles, getFriendsProfiles, getStory, auth:
             socket.on('add_friend', function (data) {
                 console.log(data);
                 dispatch(addFriend(data))
+
+
+                // user: user._id,
+                // sender_id: user._id,
+                // receiver_id: prof.user,
+                // sender_image: user.image,
+                // receiver_image: prof.image,
+                // sender_name: user.name,
+                // receiver_name: prof.name,
+                // notificationType: "FriendRequest"
+
+                const state = store.getState()
+                let users = state.auth.user
+                console.log({users})
+                console.log('ggggg', users._id)
+                if(data.sender_id !== users._id){
+                dispatch(addNotification(data))
+                }
                 // setIsLoading(false)
                 // setEmmited(false)
                 // if (data.receiver == user._id || data.sender == user._id) {
@@ -247,6 +281,14 @@ const Header = ({ chat, logout, getProfiles, getFriendsProfiles, getStory, auth:
                 console.log(data);
                 dispatch(confirmFriend(data))
                 // socket.off("confirm_friend");
+                data.notificationType = "Accepted Request";
+                const state = store.getState()
+                let users = state.auth.user
+                console.log({users})
+                console.log('ggggg', users._id)
+                if(data.sender == users._id){
+                dispatch(addNotification(data))
+                }
                 setAlert('Request Accepted', 'success');
 
             })
@@ -261,6 +303,12 @@ const Header = ({ chat, logout, getProfiles, getFriendsProfiles, getStory, auth:
 
     useEffect(() => {
         // alert('location changed')
+        const fetchData = async () => {
+
+            // await getCurrentProfile()
+
+        }
+        fetchData()
         console.log({ location })
         // loader()
         removeLoader()
@@ -548,7 +596,7 @@ const Header = ({ chat, logout, getProfiles, getFriendsProfiles, getStory, auth:
                                         </div>
                                         {/* notiviation list */}
                                         <ul>
-                                            {notifications.length && notifications.map((notf, i) => {
+                                            {notifications && notifications.map((notf, i) => {
                                                 console.log("ngng", notifications.length)
                                                 return <li key={i}>
                                                     <a href="#">
@@ -559,7 +607,8 @@ const Header = ({ chat, logout, getProfiles, getFriendsProfiles, getStory, auth:
                                                             <i className="icon-feather-thumbs-up" /></span> : <span className="notification-icon bg-gradient-success">
                                                                 <i className="icon-feather-message-circle" /></span>}
                                                         <span className="notification-text">
-                                                            <strong>{notf.sender_name} </strong>{notf.notificationType == "likePost" ? "Like Your Post" : "Commented on your post"}
+                                                        {/* data.sender !== users._id */}
+                                                            <strong>{notf.sender == user._id ? notf.sender_name : notf.reciever_name } </strong>{notf.notificationType == "likePost" ? "Like Your Post" : notf.notificationType == "FriendRequest" ? "Sent you a friend request" : notf.notificationType == "Accepted Request" ? "Accepted your friend request" : "Commented on your post"}
                                                             {/* <span className="text-primary">Learn Prototype Faster</span> */}
                                                             <br /> <span className="time-ago"> 9 hours ago </span>
                                                         </span>
@@ -711,6 +760,8 @@ Header.PropTypes = {
     fetchNotifications: PropTypes.func.isRequired,
     removeNotification: PropTypes.func.isRequired,
     onlineFriends: PropTypes.func.isRequired,
+    addNotification: PropTypes.func.isRequired,
+
 }
 
 const mapStateToProps = state => ({
@@ -723,6 +774,6 @@ const mapStateToProps = state => ({
 })
 
 export default connect(mapStateToProps, {
-    loader, logout, getFriendsProfiles, removeLoader, getProfiles, getStory,
+    loader, logout, getFriendsProfiles, addNotification, removeLoader, getProfiles, getStory,
     loadUser, removeNotification, fetchNotifications, chat, confirmFriend, onlineFriends, addFriend, getPosts, getCurrentPost, getCurrentProfile,
 })(Header);

@@ -248,18 +248,19 @@ if(localStorage.token) {
             {/* <Navbar /> */}
             {/* <Header /> */}
             <div className="main_content" >
-              <Header />
             <Route exact path="/" component={Register} />
             <div>
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
+              <Header />
+
               {/* <Route exact path="/dashboard" component={Dashboard} /> */}
 
-            {/* <Alert /> */}
+              {/* <Alert /> */}
 
               {/* <Route exact path="/profiles" component={Profiles} />
               <Route exact path="/profile/:id" component={Profile} /> */}
-            {/* <Header /> */}
+              {/* <Header /> */}
 
               <Switch>
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />

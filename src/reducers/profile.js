@@ -41,15 +41,15 @@ export default function (state = initialState, action) {
                 //  : condition2 ? value2
                 //  : condition3 ? value3
                 //  : value4;
-                profile: state.profile.user == payload.receiver ? { ...state.profile, friendRequests: [...state.profile.friendRequests, { user: payload.sender, username: payload.senderName, email: payload.senderEmail, image: payload.senderImage }] } :
+                profile: state.profile.user == payload.receiver ? { ...state.profile, friendRequests: [...state.profile.friendRequests, { user: payload.sender, username: payload.senderName, email: payload.senderEmail, senderImage: payload.senderImage }] } :
                     payload.sender == state.profile.user ? { ...state.profile, sentRequests: [...state.profile.sentRequests, { user: payload.receiver, username: payload.receiverName }] } : '',
                 loading: false
             }
         case ACCEPT_FRIEND:
             return {
                 ...state,
-                profile: state.profile.user == payload.receiver ? { ...state.profile, friendRequests: state.profile.friendRequests.filter(req => req.user !== payload.sender), friendsList: [...state.profile.friendsList, { user: payload.sender, username: payload.senderName, email: payload.senderEmail }] } :
-                    state.profile.user == payload.sender && { ...state.profile, friendsList: [...state.profile.friendsList, { user: payload.receiver, username: payload.receiverName, email: payload.receiverEmail }] },
+                profile: state.profile.user == payload.receiver ? { ...state.profile, friendRequests: state.profile.friendRequests.filter(req => req.user !== payload.sender), friendsList: [...state.profile.friendsList, { user: payload.sender, username: payload.senderName, email: payload.senderEmail,  senderImage: payload.senderImage, receiverImage: payload.senderImage }] } :
+                    state.profile.user == payload.sender && { ...state.profile, friendsList: [...state.profile.friendsList, { user: payload.receiver, username: payload.receiverName, email: payload.receiverEmail, senderImage: payload.senderImage, receiverImage: payload.senderImage }] },
                 loading: false
             }
         case GET_PROFILE:

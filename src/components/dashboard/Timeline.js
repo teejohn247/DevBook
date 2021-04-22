@@ -41,17 +41,17 @@ const Timeline = ({setAlert,confirmFriend, addFriend, getCurrentProfile, getProf
 
     const location = useLocation();
 
-    useEffect(() => {
-        socket.on('connect', function () {
-            console.log('connected!')
+    // useEffect(() => {
+    //     socket.on('connect', function () {
+    //         console.log('connected!')
 
-        })
+    //     })
       
-            return () => {
-                socket.off('disconnect');
-            };
+    //         return () => {
+    //             socket.off('disconnect');
+    //         };
 
-    }, [])
+    // }, [])
 
     const { state } = location;
 
@@ -150,7 +150,7 @@ const Timeline = ({setAlert,confirmFriend, addFriend, getCurrentProfile, getProf
                                         }
 
                                     </div>
-                                    <RightSideBar socket={socket} profile={profile} friendRequests={profile.friendRequests} user={user}/>
+                                    <RightSideBar socket={socket} profile={profile} friendsList={profile.friendsList} friendRequests={profile.friendRequests} user={user}/>
                                 </div>
                             </div>
                         </div>
