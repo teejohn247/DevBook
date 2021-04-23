@@ -21,7 +21,7 @@ import { addStory, getStory } from '../../actions/story';
 
 // import { getCurrentProfile } from '../../actions/profile';
 import { getCurrentPost } from '../../actions/post';
-import { getPosts } from '../../actions/post';
+import { getPosts, deletePost } from '../../actions/post';
 import { onlineFriends } from '../../actions/online';
 import { addLike, removeLike, addComment, addCommentLike, removeCommentLike } from '../../actions/post';
 import { addFriend, confirmFriend } from '../../actions/profile';
@@ -31,10 +31,6 @@ import logoLight from '../../images/assets/images/logo-light.png';
 import appsSvg from '../../images/assets/images/logo-light.png';
 import TopBarProgress from "react-topbar-progress-indicator";
 import {  addNotification } from '../../actions/notification';
-
-
-{/*  */ }
-{/*  */ }
 // import LoadingBar from 'react-redux-loading-bar';
 
 
@@ -44,7 +40,7 @@ import {  addNotification } from '../../actions/notification';
 const socket = io.connect('http://localhost:4000', { 'forceNew': true })
 
 
-const Header = ({ chat, logout, getProfiles, addNotification, getFriendsProfiles, getStory, auth: { user }, addFriend, loader, removeLoader, loading: { pageLoading }, removeNotification, notification: { notifications, totalNotifications }, fetchNotifications, profile,  onlineFriends, loadUser, confirmFriend, getCurrentProfile, getCurrentPost }) => {
+const Header = ({ chat, logout, getProfiles, deletePost, addNotification, getFriendsProfiles, getStory, auth: { user }, addFriend, loader, removeLoader, loading: { pageLoading }, removeNotification, notification: { notifications, totalNotifications }, fetchNotifications, profile,  onlineFriends, loadUser, confirmFriend, getCurrentProfile, getCurrentPost }) => {
     const dispatch = useDispatch();
     const [called, setCalled] = useState(false);
     const [value, setValue] = useState("");
@@ -157,6 +153,8 @@ const Header = ({ chat, logout, getProfiles, addNotification, getFriendsProfiles
     //     };
     // }, []);
 
+    
+
 
     useEffect(() => {
         // (async function anyNameFunction() {
@@ -178,6 +176,8 @@ const Header = ({ chat, logout, getProfiles, addNotification, getFriendsProfiles
             // await getProfiles()
             await getFriendsProfiles()
             console.log('ffrost', user)
+
+            
 
             // await fetchNotifications()
             // setPageLoad(false)
@@ -220,10 +220,13 @@ const Header = ({ chat, logout, getProfiles, addNotification, getFriendsProfiles
                 dispatch(chat(data))
             })
 
+            socket.on('delete_post', function (data) {
+                dispatch(deletePost(data))
+            })
+
             socket.on('add_friend', function (data) {
                 console.log(data);
                 dispatch(addFriend(data))
-
 
                 // user: user._id,
                 // sender_id: user._id,
@@ -297,6 +300,7 @@ const Header = ({ chat, logout, getProfiles, addNotification, getFriendsProfiles
 
         }
         fetchData();
+      
 
 
     }, []);
@@ -339,6 +343,10 @@ const Header = ({ chat, logout, getProfiles, addNotification, getFriendsProfiles
     const onLogout = async() => {
         // e.preventDefault()
         await logout()
+        }
+
+        if(user){
+            localStorage.setItem('user', user._id)
         }
     // return (
         return user== null ? (
@@ -761,6 +769,8 @@ Header.PropTypes = {
     removeNotification: PropTypes.func.isRequired,
     onlineFriends: PropTypes.func.isRequired,
     addNotification: PropTypes.func.isRequired,
+    deletePost: PropTypes.func.isRequired,
+
 
 }
 
@@ -774,6 +784,6 @@ const mapStateToProps = state => ({
 })
 
 export default connect(mapStateToProps, {
-    loader, logout, getFriendsProfiles, addNotification, removeLoader, getProfiles, getStory,
+    loader, logout, getFriendsProfiles, deletePost, addNotification, removeLoader, getProfiles, getStory,
     loadUser, removeNotification, fetchNotifications, chat, confirmFriend, onlineFriends, addFriend, getPosts, getCurrentPost, getCurrentProfile,
 })(Header);

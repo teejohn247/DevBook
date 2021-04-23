@@ -10,7 +10,9 @@ export const GET_ERROR= 'GET_ERROR';
 export const AUTH_ERROR= 'AUTH_ERROR';
 export const LOGOUT= 'LOGOUT';
 export const UPDATE_PROFILE = 'UPDATE_PROFILE';
+export const DELETE_POST = 'DELETE_POST';
 export const DELETE_EDU = 'DELETE_EDU';
+
 export const CLEAR_PROFILE = 'CLEAR_PROFILE';
 export const POST = 'POST';
 export const GET_POST = 'GET_POST';

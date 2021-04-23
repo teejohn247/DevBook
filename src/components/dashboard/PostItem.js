@@ -5,7 +5,7 @@ import PropTypes, { number } from 'prop-types';
 import { connect } from 'react-redux';
 import io from "socket.io-client";
 import CommentItem from './CommentItem';
-import { addLike, removeLike, addComment, addCommentLike, removeCommentLike } from '../../actions/post';
+import { addLike, removeLike, addComment, addCommentLike, deletePost, removeCommentLike } from '../../actions/post';
 import { getProfileById } from '../../actions/profile';
 
 import TimeAgo from 'timeago-react';
@@ -28,7 +28,7 @@ import InputField from './InputField';
 
 
 
-const PostItem = ({ getProfileById, socket, likes, post: { file_id, name, email, image, user_image, text, time, date, images, comments, loading, user_id }, auth: { user }, profile }) => {
+const PostItem = ({ getProfileById, deletePost, socket, likes, post: { file_id, name, email, image, user_image, text, time, date, images, comments, loading, user_id }, auth: { user }, profile }) => {
 
     // console.log("commentLikes",likes['0'].user)
 
@@ -73,6 +73,14 @@ const PostItem = ({ getProfileById, socket, likes, post: { file_id, name, email,
     //     }
     // }, [commentLike])
 
+    const handleDeletePost = async(e, file_id) => {
+        // await deletePost(file_id)
+        e.preventDefault();
+        socket.emit('delete_post', {
+            file_id: file_id,
+        })
+    }
+
     const handleComment = (e, file_id, name) => {
         e.preventDefault();
         setIsLoading(true)
@@ -85,7 +93,6 @@ const PostItem = ({ getProfileById, socket, likes, post: { file_id, name, email,
             user_image: user.image,
             text: comment,
             name: user.name,
-
             user: user._id,
             sender_id: user._id,
             receiver_id: user_id,
@@ -335,21 +342,22 @@ const PostItem = ({ getProfileById, socket, likes, post: { file_id, name, email,
 
                         {/* <p> {time} <span> hrs</span> <i className="uil-users-alt" /> </p> */}
                     </div>
-                    <div className="post-btn-action">
-                        <span className="icon-more uil-ellipsis-h" />
-                        <div className="mt-0 p-2" uk-dropdown="pos: top-right;mode:hover ">
-                            <ul className="uk-nav uk-dropdown-nav">
-                                {/* <li><a href="#"> <i className="uil-share-alt mr-1" /> Share</a> </li>
+                    {user_id == user._id &&
+                        <div className="post-btn-action">
+                            <span className="icon-more uil-ellipsis-h" />
+                            <div className="mt-0 p-2" uk-dropdown="pos: top-right;mode:hover ">
+                                <ul className="uk-nav uk-dropdown-nav">
+                                    {/* <li><a href="#"> <i className="uil-share-alt mr-1" /> Share</a> </li>
                                 <li><a href="#"> <i className="uil-edit-alt mr-1" /> Edit Post </a></li>
                                 <li><a href="#"> <i className="uil-comment-slash mr-1" /> Disable comments
                                                       </a></li>
                                 <li><a href="#"> <i className="uil-favorite mr-1" /> Add favorites </a>
                                 </li> */}
-                                <li><a href="#" className="text-danger"> <i className="uil-trash-alt mr-1" />
-                                                    Delete </a></li>
-                            </ul>
+                                    <li><span className="text-danger" onClick={e => handleDeletePost(e, file_id)}> <i className="uil-trash-alt mr-1" />Delete </span></li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
                 {/* <div class="post-description">
                 <div class="uk-grid-small uk-grid">
@@ -410,10 +418,10 @@ const PostItem = ({ getProfileById, socket, likes, post: { file_id, name, email,
                     <div className="post-state-btns" style={{ width: "20px", display: "flex", justifyContent: "flex-end", padding: "10px" }}> <i className="uil-heart" /> {comments.length} <span> Coments</span>
                     </div> */}
 
-                    <div className="post-state-btns" style={{ width: "20px", display: "flex", justifyContent: "flex-start", padding: "0px 15px" }}>{userLikes == true ? <i class="fas fa-thumbs-up" style={{ color: "#39f" }} onClick={e => removeLikes(e, file_id, user._id)}></i> : <i className="uil-thumbs-up" onClick={e => addLikes(e, file_id, user._id)} />} {likes ? likes.length + (likeNumber) == 0 ? '' : likes.length + (likeNumber): ''}<span> Liked </span>
-                        </div>
-                        <div className="post-state-btns" style={{ width: "20px", display: "flex", justifyContent: "flex-end", padding: "10px" }}> <i className="uil-heart" /> {comments ? comments.length : ''} <span> Coments</span>
-                        </div>
+                    <div className="post-state-btns" style={{ width: "20px", display: "flex", justifyContent: "flex-start", padding: "0px 15px" }}>{userLikes == true ? <i class="fas fa-thumbs-up" style={{ color: "#39f" }} onClick={e => removeLikes(e, file_id, user._id)}></i> : <i className="uil-thumbs-up" onClick={e => addLikes(e, file_id, user._id)} />} {likes ? likes.length + (likeNumber) == 0 ? '' : likes.length + (likeNumber) : ''}<span> Liked </span>
+                    </div>
+                    <div className="post-state-btns" style={{ width: "20px", display: "flex", justifyContent: "flex-end", padding: "10px" }}> <i className="uil-heart" /> {comments ? comments.length : ''} <span> Coments</span>
+                    </div>
 
 
                     {/* <div className="post-state-btns"> <i className="uil-share-alt" /> 193 <span> Shared
@@ -538,21 +546,22 @@ const PostItem = ({ getProfileById, socket, likes, post: { file_id, name, email,
 
                             {/* <p> {time}<span> hrs</span> <i className="uil-users-alt" /> </p> */}
                         </div>
+                        {user_id == user._id &&
                         <div className="post-btn-action">
                             <span className="icon-more uil-ellipsis-h" />
                             <div className="mt-0 p-2" uk-dropdown="pos: top-right;mode:hover ">
                                 <ul className="uk-nav uk-dropdown-nav">
                                     {/* <li><a href="#"> <i className="uil-share-alt mr-1" /> Share</a> </li>
-                                    <li><a href="#"> <i className="uil-edit-alt mr-1" /> Edit Post </a></li>
-                                    <li><a href="#"> <i className="uil-comment-slash mr-1" /> Disable comments
-                                    </a></li>
-                                    <li><a href="#"> <i className="uil-favorite mr-1" /> Add favorites </a>
-                                    </li> */}
-                                    <li><a href="#" className="text-danger"> <i className="uil-trash-alt mr-1" />
-                                                        Delete </a></li>
+                                <li><a href="#"> <i className="uil-edit-alt mr-1" /> Edit Post </a></li>
+                                <li><a href="#"> <i className="uil-comment-slash mr-1" /> Disable comments
+                                                      </a></li>
+                                <li><a href="#"> <i className="uil-favorite mr-1" /> Add favorites </a>
+                                </li> */}
+                                    <li><span className="text-danger" onClick={e => handleDeletePost(e, file_id)}> <i className="uil-trash-alt mr-1" />Delete </span></li>
                                 </ul>
                             </div>
                         </div>
+                    }
                     </div>
                     <div className="post-description">
                         <p> {text}</p>
@@ -570,7 +579,7 @@ const PostItem = ({ getProfileById, socket, likes, post: { file_id, name, email,
                         </div>
                     </div>
                     <div className="post-state">
-                        <div className="post-state-btns" style={{ width: "20px", display: "flex", justifyContent: "flex-start", padding: "0px 15px" }}>{userLikes == true ? <i class="fas fa-thumbs-up" style={{ color: "#39f" }} onClick={e => removeLikes(e, file_id, user._id)}></i> : <i className="uil-thumbs-up" onClick={e => addLikes(e, file_id, user._id)} />} {likes ? likes.length + (likeNumber) == 0 ? '' : likes.length + (likeNumber): ''}<span> Liked </span>
+                        <div className="post-state-btns" style={{ width: "20px", display: "flex", justifyContent: "flex-start", padding: "0px 15px" }}>{userLikes == true ? <i class="fas fa-thumbs-up" style={{ color: "#39f" }} onClick={e => removeLikes(e, file_id, user._id)}></i> : <i className="uil-thumbs-up" onClick={e => addLikes(e, file_id, user._id)} />} {likes ? likes.length + (likeNumber) == 0 ? '' : likes.length + (likeNumber) : ''}<span> Liked </span>
                         </div>
                         <div className="post-state-btns" style={{ width: "20px", display: "flex", justifyContent: "flex-end", padding: "10px" }}> <i className="uil-heart" /> {comments ? comments.length : ''} <span> Comments</span>
                         </div>
@@ -690,11 +699,11 @@ PostItem.PropTypes = {
     auth: PropTypes.object.isRequired,
     getProfileById: PropTypes.func.isRequired,
     // removeLikes: PropTypes.func.isRequired,
-    // deletePost: PropTypes.func.isRequired
+    deletePost: PropTypes.func.isRequired
 }
 const mapStateToProps = (state) => ({
     auth: state.auth,
 })
-export default connect(mapStateToProps, { getProfileById })(PostItem);
+export default connect(mapStateToProps, { getProfileById, deletePost })(PostItem);
 
 

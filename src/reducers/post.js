@@ -1,4 +1,4 @@
-import { POST, GET_POST, ADD_LIKE, REMOVE_LIKE, REMOVE_COMMENT_LIKE, ADD_COMMENT, ADD_COMMENT_LIKE } from '../actions/types'
+import { POST, GET_POST, ADD_LIKE, REMOVE_LIKE, REMOVE_COMMENT_LIKE, DELETE_POST, ADD_COMMENT, ADD_COMMENT_LIKE } from '../actions/types'
 import store from '../store';
 import loader from '../actions/loader';
 
@@ -27,6 +27,12 @@ export default function (state = initialState, action) {
                 loading: false,
                 feedLoader: false
             }
+        case DELETE_POST:
+            return {
+                ...state,
+                posts: state.posts.filter(post => post.file_id !== payload),
+                loading: false
+                }
         case POST:
             return {
                 ...state,

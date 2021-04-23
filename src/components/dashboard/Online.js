@@ -222,7 +222,7 @@ const Online = ({ chat, fetchChats, profiles, online: { onlineUsers }, user }) =
                             <li className="uk-active"><a href="#">Users</a></li>
                             <li><a href="#">Groups</a></li>
                         </ul>
-                        {onlineUsers.map((users, i) => {
+                        {onlineUsers.length > 0 ? onlineUsers.map((users, i) => {
                             let arr = [];
                             profiles.friendsList.map(pr => arr.push(pr.user))
                             return (user._id != users._id && arr.includes(users._id) &&
@@ -233,7 +233,7 @@ const Online = ({ chat, fetchChats, profiles, online: { onlineUsers }, user }) =
                                     <h5> {users.name} </h5>
                                 </div>
                             </span>)
-                        })
+                        }) : <p>No Friend Available</p>
                         }
 
                         {/* <a href="#">

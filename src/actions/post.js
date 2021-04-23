@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { POST, GET_POST, ADD_LIKE, ADD_COMMENT, REMOVE_LIKE, REMOVE_COMMENT_LIKE, ADD_COMMENT_LIKE, POST_ERROR } from './types';
+import { POST, GET_POST, ADD_LIKE,DELETE_POST, ADD_COMMENT, REMOVE_LIKE, REMOVE_COMMENT_LIKE, ADD_COMMENT_LIKE, POST_ERROR } from './types';
 import { setAlert } from './alert';
 import { loader } from './loader';
 
@@ -33,7 +33,6 @@ export const addLike = (data) => dispatch => {
          type:ADD_LIKE,
          payload: data
     }
-
 }
 
 export const addCommentLike = (data) => dispatch => {
@@ -196,27 +195,31 @@ export const getCurrentPost = () => async dispatch => {
 //     }
 // }
 
-// export const deleteEdu = (edu_id) => async dispatch => {
-//     try{
-//          const res = await axios.delete(`http://localhost:4000/api/v1/edu/del/${edu_id}`);
-//         dispatch({
-//             type:DELETE_EDU,
-//             payload: res.data
-//         })
-//         dispatch (setAlert('Successfully deleted', 'success'));
-//     } catch(err){
-//         const errors = err.response.data.errors
-//         if(errors){
-//             errors.forEach(error => dispatch(
-//                 setAlert(error.msg, 'danger')
-//         ))
-//         }
-//         dispatch({
-//             type:PROFILE_ERROR,
-//             payload: {error: err.response.error}
+export const deletePost = (data) => {
 
-//         })
-//     }
+        return {
+            type:DELETE_POST,
+            payload: data.file_id
+        }
+}
+        //  const res = await axios.delete(`http://localhost:4000/api/v1/del/post/${file_id}`);
+        // dispatch({
+        //     type:DELETE_POST,
+        //     payload: file_id
+        // })
+        // dispatch (setAlert('Successfully deleted', 'success'));
+    // } catch(err){
+    //     const errors = err.response.data.errors
+    //     if(errors){
+    //         errors.forEach(error => dispatch(
+    //             setAlert(error.msg, 'danger')
+    //     ))
+    //     }
+    //     dispatch({
+    //         type:POST_ERROR,
+    //         payload: {error: err.response.error, status: err.response.status}
+    //     })
+    // }
 // }
 
 // export const deleteExp = (exp_id) => async dispatch => {

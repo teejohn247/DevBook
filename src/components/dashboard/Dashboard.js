@@ -1,12 +1,12 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Redirect, useLocation, } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { register } from '../../actions/auth';
 import LoadingSpinner from '../layout/spinner';
 import { setAlert } from '../../actions/alert';
-import { getCurrentProfile, confirmFriend, getProfiles } from '../../actions/profile';
+import { getCurrentProfile, confirmFriend, getProfiles, getProfileById } from '../../actions/profile';
 import { getCurrentPost } from '../../actions/post';
 import { getPosts } from '../../actions/post';
 import { loader, removeLoader } from '../../actions/loader';
@@ -24,7 +24,7 @@ import RightSideBar from "./RightSideBar";
 import InputField from "./InputField";
 import Header from "./Header";
 import Story from "./Story";
-import {  addLike, removeLike, addComment, addCommentLike, removeCommentLike } from '../../actions/post';
+import {  addLike, removeLike,  addComment, addCommentLike, removeCommentLike } from '../../actions/post';
 import {  addNotification, fetchNotifications, removeNotification } from '../../actions/notification';
 
 
@@ -35,7 +35,7 @@ const socket = io.connect('http://localhost:4000', { 'forceNew': true })
 // let socket;
 
 
-const Dashboard = ({getProfiles, addNotification, fetchNotifications, loadUser, online, addStory, getStory, loader, removeLoader, confirmFriend, getPosts, getCurrentPost, getCurrentProfile, addLike, removeLike, addComment, addCommentLike, removeCommentLike, post: { posts, comments, feedLoader }, profile: { profile, loading } }) => {
+const Dashboard = ({getProfiles, addNotification, getProfileById, fetchNotifications, loadUser, online, addStory, getStory, loader, removeLoader, confirmFriend, getPosts, getCurrentPost, getCurrentProfile, addLike, removeLike, addComment, addCommentLike, removeCommentLike, post: { posts, comments, feedLoader }, profile: { profile, loading } }) => {
     console.log({ loader })
     // const [selectetdFile, setSelectedFile] = useState([]);
     // const [post, setPost] = useState("");
@@ -45,6 +45,7 @@ const Dashboard = ({getProfiles, addNotification, fetchNotifications, loadUser, 
     // const [postInput, setPostInput] = useState(false);
     // const dispatch = useDispatch();
 
+    const location = useLocation();
 
 
     // var post_id = Date.now() + Number(localStorage.getItem('user_id'))
@@ -104,11 +105,41 @@ const Dashboard = ({getProfiles, addNotification, fetchNotifications, loadUser, 
 
     const dispatch = useDispatch();
 
+    var state = store.getState()
+    var user = state.auth.user
+
+    console.log('mmmt', user)
+
+
+    // useEffect(() => {
+    //     async () => {
+    //         // await loadUser()
+    //         // console.log({user})
+    //         await getProfileById(user._id)
+    //     })()
+    //   }, [user])
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+
+            await loadUser()
+            // const state = await store.getState()
+            // let user = state.auth.user
+            console.log({user})
+            // if(user._id){
+            await getProfileById(localStorage.getItem('user'))
+            // }
+
+        }
+        fetchData()
+
+    }, [])
+
+
     // const [value, setValue] = useState("");
 
-    const state = store.getState()
-    let user = state.auth.user
-
+ 
     
     const handleChat = (e) => {
         e.preventDefault();
@@ -121,28 +152,30 @@ const Dashboard = ({getProfiles, addNotification, fetchNotifications, loadUser, 
     }
 
 
-    useEffect(() => {
-    //     // socket.on('connect', function () {
-    //     //     console.log('connected!')
-    //     // })
-    //     // loader(true)
-        const fetchData = async () => {
-            // await loadUser()
-            await getCurrentProfile()
-            // await getCurrentPost()
-            // await getStory()
-            // await getProfiles()
-            // await fetchNotifications()
+ 
 
-            // setUse(auth.user)
-        }
+    // useEffect(() => {
+    // //     // socket.on('connect', function () {
+    // //     //     console.log('connected!')
+    // //     // })
+    // //     // loader(true)
+    //     const fetchData = async () => {
+    //         // await loadUser()
+    //         // await getCurrentProfile();
+    //         // await getCurrentPost()
+    //         // await getStory()
+    //         // await getProfiles()
+    //         // await fetchNotifications()
 
-        fetchData();
-    //     // return () => {
-    //     //     socket.off('disconnect');
-    //     // };
+    //         // setUse(auth.user)
+    //     }
 
-    }, []);
+    //     fetchData();
+    // //     // return () => {
+    // //     //     socket.off('disconnect');
+    // //     // };
+
+    // }, [location]);
 
 
     useEffect(() => {
@@ -366,6 +399,8 @@ const Dashboard = ({getProfiles, addNotification, fetchNotifications, loadUser, 
         })
         // }
     }, [emmited, comment])
+
+  
     return loading && profile == null ? (
         <LoadingSpinner />
     ) : (
@@ -972,7 +1007,7 @@ Dashboard.PropTypes = {
     confirmFriend: PropTypes.func.isRequired,
     loader: PropTypes.func.isRequired,
     removeLoader: PropTypes.func.isRequired,
-
+    getProfileById:  PropTypes.func.isRequired,
     getCurrentProfile: PropTypes.func.isRequired,
     addNotification: PropTypes.func.isRequired,
     fetchNotification: PropTypes.func.isRequired,
@@ -1000,7 +1035,7 @@ const mapStateToProps = state => ({
 })
 
 
-export default connect(mapStateToProps, { getProfiles, addNotification, fetchNotifications, removeLoader,
+export default connect(mapStateToProps, { getProfiles, getProfileById, addNotification, fetchNotifications, removeLoader,
     loadUser, loader, getPosts, getCurrentPost, getCurrentProfile,
     addComment, addLike, removeLike, addComment, addCommentLike, getStory, confirmFriend, removeCommentLike, addStory
 })(Dashboard);
