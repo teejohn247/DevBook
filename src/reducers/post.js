@@ -38,7 +38,7 @@ export default function (state = initialState, action) {
                 // payload.user_id == profile.user ||
                 ...state,
                 post: payload,
-                posts: [profile.profile.friendsList.some(frnd => frnd.user == payload.user_id ? payload : payload.user_id == profile.user ? payload : ''), ...state.posts],
+                posts: [profile.profile.friendsList.some(frnd => frnd.user == payload.user_id ? payload : payload.user_id == profile.profile.user ? payload : ''), ...state.posts],
                 loading: false,
                 feedLoader: false
             }
