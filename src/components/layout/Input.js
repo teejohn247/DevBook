@@ -11,7 +11,7 @@ import io from "socket.io-client/dist/socket.io.js";
 import { addLike, removeLike, addComment, addCommentLike, removeCommentLike } from '../../actions/post';
 import LoadingSpinner from '../layout/spinner';
 
-const socket = io.connect('http://localhost:4000')
+const socket = io.connect('https://devbook-node.herokuapp.com', { 'forceNew': true })
 
 
 const input = ({ editProfile, user, profile, getPosts, onClick, value }) => {

@@ -13,7 +13,7 @@ import io from "socket.io-client/dist/socket.io.js";
 
 
 
-const socket = io.connect('http://localhost:4000', { 'forceNew': true })
+const socket = io.connect('https://devbook-node.herokuapp.com', { 'forceNew': true })
 
 const Online = ({ chat, fetchChats, profiles, online: { onlineUsers }, user }) => {
     console.log('hp',profiles)

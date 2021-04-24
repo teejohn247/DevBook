@@ -18,7 +18,7 @@ import { setAlert } from '../../actions/alert';
 import { BrowserRouter, useHistory, useParams } from 'react-router-dom';
 
 
-const socket = io.connect('http://localhost:4000', { 'forceNew': true })
+const socket = io.connect('https://devbook-node.herokuapp.com', { 'forceNew': true })
 
 const findFriends = ({setAlert,  getCurrentProfile, getFriendsProfiles, loadUser, auth: { user }, profile: { loading, profiles, profile } }) => {
 console.log("ppp", profile)

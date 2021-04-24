@@ -22,7 +22,7 @@ import Alert from '../layout/Alert';
 import LoadingSpinner from '../layout/spinner';
 
 
-const socket = io.connect('http://localhost:4000', { 'forceNew': true })
+const socket = io.connect('https://devbook-node.herokuapp.com', { 'forceNew': true })
 
 
 

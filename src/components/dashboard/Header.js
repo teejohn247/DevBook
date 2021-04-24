@@ -38,7 +38,7 @@ import {  addNotification } from '../../actions/notification';
 
 
 
-const socket = io.connect('http://localhost:4000', { 'forceNew': true })
+const socket = io.connect('https://devbook-node.herokuapp.com', { 'forceNew': true })
 
 
 const Header = ({ chat, logout, getProfiles, deletePost, addNotification, getFriendsProfiles, getStory, auth: { user }, addFriend, loader, removeLoader, loading: { pageLoading }, removeNotification, notification: { notifications, totalNotifications }, fetchNotifications, profile,  onlineFriends, loadUser, confirmFriend, getCurrentProfile, getCurrentPost }) => {
