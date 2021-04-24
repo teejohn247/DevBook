@@ -16,7 +16,7 @@ export default function (state = initialState, action) {
 
     const { type, payload, profile } = action;
 
-    console.log('comment',profile)
+    console.log('comment', payload.user_id == profile.user,  payload.user_id,profile.user )
     switch (type) {
 
         case GET_POST:
@@ -35,9 +35,10 @@ export default function (state = initialState, action) {
                 }
         case POST:
             return {
+                // payload.user_id == profile.user ||
                 ...state,
                 post: payload,
-                posts: [profile.profile.friendsList.some(frnd => payload.user_id == profile.user || frnd.user == payload.user_id) ? payload : '', ...state.posts],
+                posts: [profile.profile.friendsList.some(frnd => frnd.user == payload.user_id ? payload : payload.user_id == profile.user ? payload : ''), ...state.posts],
                 loading: false,
                 feedLoader: false
             }
