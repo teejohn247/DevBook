@@ -72,7 +72,7 @@ export const removeLike = (data) => dispatch => {
 
 export const getCurrentPost = () => async dispatch => {
     try{
-        const res = await axios.get(`http://localhost:4000/api/v1/fetchUpdates`);
+        const res = await axios.get(`https://devbook-node.herokuapp.com/api/v1/fetchUpdates`);
         dispatch({
             type:GET_POST,
             payload: res.data
@@ -95,7 +95,7 @@ export const getCurrentPost = () => async dispatch => {
 //         }
 //     }
 //     try{
-//         const res = await axios.get('http://localhost:4000/api/v1/profile');
+//         const res = await axios.get('https://devbook-node.herokuapp.comprofile');
 //         dispatch({
 //             type:GET_PROFILE,
 //             payload: res.data
@@ -116,7 +116,7 @@ export const getCurrentPost = () => async dispatch => {
     //     }
     // }
     // try{
-    //     const res = await axios.post('http://localhost:4000/api/v1/profile', formData, config);
+    //     const res = await axios.post('https://devbook-node.herokuapp.comprofile', formData, config);
     //     dispatch({
     //         type:GET_PROFILE,
     //         payload: res.data
@@ -144,7 +144,7 @@ export const getCurrentPost = () => async dispatch => {
 //         }
 //     }
 //     try{
-//         const res = await axios.post('http://localhost:4000/api/v1/edu', formData, config);
+//         const res = await axios.post('https://devbook-node.herokuapp.comedu', formData, config);
 //         dispatch({
 //             type:UPDATE_PROFILE,
 //             payload: res.data
@@ -173,7 +173,7 @@ export const getCurrentPost = () => async dispatch => {
 //         }
 //     }
 //     try{
-//         const res = await axios.post('http://localhost:4000/api/v1/exp', formData, config);
+//         const res = await axios.post('https://devbook-node.herokuapp.comexp', formData, config);
 //         dispatch({
 //             type:UPDATE_PROFILE,
 //             payload: res.data
@@ -202,7 +202,7 @@ export const deletePost = (data) => {
             payload: data.file_id
         }
 }
-        //  const res = await axios.delete(`http://localhost:4000/api/v1/del/post/${file_id}`);
+        //  const res = await axios.delete(`https://devbook-node.herokuapp.comdel/post/${file_id}`);
         // dispatch({
         //     type:DELETE_POST,
         //     payload: file_id
@@ -224,7 +224,7 @@ export const deletePost = (data) => {
 
 // export const deleteExp = (exp_id) => async dispatch => {
 //     try{
-//          const res = await axios.delete(`http://localhost:4000/api/v1/exp/del/${exp_id}`);
+//          const res = await axios.delete(`https://devbook-node.herokuapp.comexp/del/${exp_id}`);
 //         dispatch({
 //             type:UPDATE_PROFILE,
 //             payload: res.data

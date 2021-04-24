@@ -22,7 +22,7 @@ export const fetchChats = (data) => async dispatch => {
     }
     console.log({data})
     try {
-        const res = await axios.post('http://localhost:4000/api/v1/fetchChats', data, config);
+        const res = await axios.post('https://devbook-node.herokuapp.com/api/v1/fetchChats', data, config);
         console.log({res})
         dispatch({
             type: FETCH_CHATS,

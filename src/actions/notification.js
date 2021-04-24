@@ -21,7 +21,7 @@ export const fetchNotifications = () => async dispatch => {
     let tme = notificationtime ? notificationtime : time
 
     try{
-        const res = await axios.get(`http://localhost:4000/api/v1/notifications/${tme}/1/50`);
+        const res = await axios.get(`https://devbook-node.herokuapp.com/api/v1/notifications/${tme}/1/50`);
         dispatch({
             type:FETCH_NOTIFICATIONS,
             payload: res.data

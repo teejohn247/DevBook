@@ -16,7 +16,7 @@ export const addStory = (data) => dispatch => {
 
 export const getStory = () => async dispatch => {
     try{
-        const res = await axios.get(`http://localhost:4000/api/v1/story`);
+        const res = await axios.get(`https://devbook-node.herokuapp.com/api/v1/story`);
         dispatch({
             type:VIEW_STORY,
             payload: res.data

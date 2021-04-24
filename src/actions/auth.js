@@ -14,7 +14,7 @@ export const register = ({ name, email, password }) => async dispatch => {
     }
     const body = JSON.stringify({name, email, password});
     try {
-        const res = await axios.post('http://localhost:4000/api/v1/signup', body, config);
+        const res = await axios.post('https://devbook-node.herokuapp.com/api/v1/signup', body, config);
         dispatch({
             type: REGISTER_SUCCESS,
             payload: res.data
@@ -41,7 +41,7 @@ export const login = ({ email, password }) => async dispatch => {
     }
     const body = JSON.stringify({ email, password });
     try {
-        const res = await axios.post('http://localhost:4000/api/v1/login', body, config);
+        const res = await axios.post('https://devbook-node.herokuapp.com/api/v1/login', body, config);
         dispatch({
             type: LOGIN_SUCCESS,
             payload: res.data
@@ -64,7 +64,7 @@ export const loadUser = () => async dispatch => {
         setAuthToken(localStorage.token)
     }
     try {
-        const res = await axios.get('http://localhost:4000/api/v1/user');
+        const res = await axios.get('https://devbook-node.herokuapp.com/api/v1/user');
         dispatch({
             type: USER_LOADED,
             payload: res.data

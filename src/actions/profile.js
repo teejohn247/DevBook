@@ -6,7 +6,7 @@ import { setAlert } from './alert';
 export const getProfiles = () => async dispatch => {
     // dispatch({type: CLEAR_PROFILE})
     try{
-        const res = await axios.get('http://localhost:4000/api/v1/allprofiles');
+        const res = await axios.get('https://devbook-node.herokuapp.com/api/v1/allprofiles');
         dispatch({
             type:GET_PROFILES,
             payload: res.data
@@ -22,7 +22,7 @@ export const getProfiles = () => async dispatch => {
 export const getFriendsProfiles = () => async dispatch => {
     // dispatch({type: CLEAR_PROFILE})
     try{
-        const res = await axios.get('http://localhost:4000/api/v1/getProfiles');
+        const res = await axios.get('https://devbook-node.herokuapp.com/api/v1/getProfiles');
         dispatch({
             type:GET_PROFILES,
             payload: res.data.records
@@ -71,7 +71,7 @@ export const getProfileById = (userId) =>async (dispatch, getState)=> {
 
     
     try{
-        const res = await axios.get(`http://localhost:4000/api/v1/profile/${ID}`);
+        const res = await axios.get(`https://devbook-node.herokuapp.com/api/v1/profile/${ID}`);
         console.log('sql2', res.data)
         
         dispatch({
@@ -114,7 +114,7 @@ export const getCurrentProfile = () => async dispatch => {
         }
     }
     try{
-        const res = await axios.get('http://localhost:4000/api/v1/profile');
+        const res = await axios.get('https://devbook-node.herokuapp.com/api/v1/profile');
         dispatch({
             type:GET_PROFILE,
             payload: res.data
@@ -134,7 +134,7 @@ export const createProfile = (formData, history, edit=false) => async dispatch =
         }
     }
     try{
-        const res = await axios.post('http://localhost:4000/api/v1/profile', formData, config);
+        const res = await axios.post('https://devbook-node.herokuapp.com/api/v1/profile', formData, config);
         dispatch({
             type:GET_PROFILE,
             payload: res.data
@@ -163,7 +163,7 @@ export const editProfile = (data) => async dispatch => {
         }
     }
     try{
-        const res = await axios.patch('http://localhost:4000/api/v1/editProfile', data, config);
+        const res = await axios.patch('https://devbook-node.herokuapp.com/api/v1/editProfile', data, config);
         dispatch({
             type:EDIT_PROFILE,
             payload: res.data
@@ -192,7 +192,7 @@ export const addEducation = (formData, history) => async dispatch => {
         }
     }
     try{
-        const res = await axios.post('http://localhost:4000/api/v1/edu', formData, config);
+        const res = await axios.post('https://devbook-node.herokuapp.com/api/v1/edu', formData, config);
         dispatch({
             type:UPDATE_PROFILE,
             payload: res.data
@@ -220,7 +220,7 @@ export const addExperience = (formData, history) => async dispatch => {
         }
     }
     try{
-        const res = await axios.post('http://localhost:4000/api/v1/exp', formData, config);
+        const res = await axios.post('https://devbook-node.herokuapp.com/api/v1/exp', formData, config);
         dispatch({
             type:UPDATE_PROFILE,
             payload: res.data
@@ -244,7 +244,7 @@ export const addExperience = (formData, history) => async dispatch => {
 
 export const deleteEdu = (edu_id) => async dispatch => {
     try{
-         const res = await axios.delete(`http://localhost:4000/api/v1/edu/del/${edu_id}`);
+         const res = await axios.delete(`https://devbook-node.herokuapp.com/api/v1/edu/del/${edu_id}`);
         dispatch({
             type:DELETE_EDU,
             payload: res.data
@@ -267,7 +267,7 @@ export const deleteEdu = (edu_id) => async dispatch => {
 
 export const deleteExp = (exp_id) => async dispatch => {
     try{
-         const res = await axios.delete(`http://localhost:4000/api/v1/exp/del/${exp_id}`);
+         const res = await axios.delete(`https://devbook-node.herokuapp.com/api/v1/exp/del/${exp_id}`);
         dispatch({
             type:UPDATE_PROFILE,
             payload: res.data
