@@ -324,7 +324,7 @@ const PostItem = ({ getProfileById, deletePost, socket, likes, post: { file_id, 
     }
 
 
-    return loading == true ? (<LoadingSpinner />) : images ? (
+    return loading == true ? (<LoadingSpinner />) : images && text ? (
 
         <Fragment>
             <div className="post">
@@ -531,7 +531,7 @@ const PostItem = ({ getProfileById, deletePost, socket, likes, post: { file_id, 
                 </div>
             </div>
         </Fragment >
-    ) : (
+    ) : text ? (
             <Fragment>
                 <div className="post">
                     <div className="post-heading">
@@ -687,7 +687,7 @@ const PostItem = ({ getProfileById, deletePost, socket, likes, post: { file_id, 
                     </div>
                 </div>
             </Fragment >
-        )
+        ) : ''
 
 
 }
