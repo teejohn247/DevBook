@@ -6,7 +6,8 @@ import { NavLink, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import logo from '../../images/assets/images/logo.png';
 import logoLight from '../../images/assets/images/logo-light.png';
-import io from "socket.io-client";
+import io from "socket.io-client/dist/socket.io.js";
+
 import { addLike, removeLike, addComment, addCommentLike, removeCommentLike } from '../../actions/post';
 import LoadingSpinner from '../layout/spinner';
 import { showLoading, hideLoading } from 'react-redux-loading-bar';

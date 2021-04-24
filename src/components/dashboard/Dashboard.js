@@ -13,7 +13,7 @@ import { loader, removeLoader } from '../../actions/loader';
 import { addStory, getStory } from '../../actions/story';
 import { loadUser } from '../../actions/auth';
 import PostItem from './PostItem';
-import io from "socket.io-client";
+import io from "socket.io-client/dist/socket.io.js";
 import SocketIOFileUpload from 'socketio-file-upload';
 import Alert from '../layout/Alert';
 import SideBar from "./SideBar";
@@ -59,22 +59,11 @@ const Dashboard = ({getProfiles, addNotification, getProfileById, fetchNotificat
     // const [files, setFiles] = useState([]);
 
 
-    // useEffect(() => {
-    //     socket.on('connect', function () {
-    //         console.log('connected!')
+    useEffect(() => {
+     
+        getCurrentPost()
 
-    //     })
-    //     loadUser()
-    //     getCurrentProfile()
-    //     getCurrentPost()
-
-
-
-    //     return () => {
-    //         socket.off('disconnect');
-    //      };
-
-    // }, [])
+    }, [])
 
 
 

@@ -6,7 +6,8 @@ import { getPosts } from '../../actions/post';
 import { editProfile } from '../../actions/profile';
 
 import TextareaAutosize from "react-textarea-autosize";
-import io from "socket.io-client";
+import io from "socket.io-client/dist/socket.io.js";
+
 import { addLike, removeLike, addComment, addCommentLike, removeCommentLike } from '../../actions/post';
 import LoadingSpinner from '../layout/spinner';
 

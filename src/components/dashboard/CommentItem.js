@@ -2,7 +2,7 @@ import React, { useEffect, useState, Fragment } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import io from "socket.io-client";
+import io from "socket.io-client/dist/socket.io.js";
 import { addLike, removeLike, addComment, addCommentLike, removeCommentLike } from '../../actions/post';
 import LoadingSpinner from '../layout/spinner';
 

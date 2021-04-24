@@ -2,7 +2,8 @@ import React, { useEffect, useState, Fragment } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import io from "socket.io-client";
+import io from "socket.io-client/dist/socket.io.js";
+
 import { getPosts } from '../../actions/post';
 import { loader, removeLoader } from '../../actions/loader';
 

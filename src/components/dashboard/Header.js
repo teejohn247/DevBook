@@ -5,7 +5,8 @@ import { useDispatch } from 'react-redux';
 import { loader, removeLoader } from '../../actions/loader';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import io from "socket.io-client";
+import io from "socket.io-client/dist/socket.io.js";
+
 import { fetchNotifications, removeNotification } from '../../actions/notification';
 import LoadingSpinner from '../layout/spinner';
 import { setAlert } from '../../actions/alert';

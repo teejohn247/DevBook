@@ -7,7 +7,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // import { Socket } from 'socket.io-client';
-import io from "socket.io-client";
+import io from "socket.io-client/dist/socket.io.js";
+
 
 
 

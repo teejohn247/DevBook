@@ -7,7 +7,8 @@ import LoadingSpinner from '../layout/spinner';
 import { getFriendsProfiles,getCurrentProfile } from '../../actions/profile';
 import Find from './Find';
 import SideBar from "./SideBar";
-import io from "socket.io-client";
+import io from "socket.io-client/dist/socket.io.js";
+
 import Header from "./Header";
 import { loadUser } from '../../actions/auth';
 import Alert from '../layout/Alert';

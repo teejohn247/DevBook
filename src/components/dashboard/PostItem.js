@@ -3,7 +3,8 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes, { number } from 'prop-types';
 import { connect } from 'react-redux';
-import io from "socket.io-client";
+import io from "socket.io-client/dist/socket.io.js";
+
 import CommentItem from './CommentItem';
 import { addLike, removeLike, addComment, addCommentLike, deletePost, removeCommentLike } from '../../actions/post';
 import { getProfileById } from '../../actions/profile';

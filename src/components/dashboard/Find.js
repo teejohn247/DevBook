@@ -7,7 +7,8 @@ import { addFriend, confirmFriend } from '../../actions/profile';
 import { setAlert } from '../../actions/alert';
 import Alert from '../layout/Alert';
 
-import io from "socket.io-client";
+import io from "socket.io-client/dist/socket.io.js";
+
 
 const Find = ({ addFriend, socket, confirmed, setAlert, req, prof, user, profil }) => {
     const [sentReq, setSentReq] = useState(false)
