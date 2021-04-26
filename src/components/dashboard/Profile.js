@@ -269,9 +269,9 @@ const profile = ({ setAlert, getProfileById, getCurrentProfile, profile: { profi
                             <a href="#" className="button light button-icon mr-lg-3" aria-expanded="false"> <i className="uil-ellipsis-h"> </i> </a>
                             <div uk-dropdown="pos: bottom-left ; mode:hover" className="display-hidden uk-dropdown">
                                 <ul className="uk-nav uk-dropdown-nav">
-                                    <li><a href="#"> View as guest </a></li>
+                                    {/* <li><a href="#"> View as guest </a></li>
                                     <li><a href="#"> Block this person </a></li>
-                                    <li><a href="#"> Report abuse</a></li>
+                                    <li><a href="#"> Report abuse</a></li> */}
                                 </ul>
                             </div>
                         </div>}
@@ -283,9 +283,9 @@ const profile = ({ setAlert, getProfileById, getCurrentProfile, profile: { profi
                             <a href="#" className="button light button-icon mr-lg-3" aria-expanded="false"> <i className="uil-ellipsis-h"> </i> </a>
                             <div uk-dropdown="pos: bottom-left ; mode:hover" className="display-hidden uk-dropdown">
                                 <ul className="uk-nav uk-dropdown-nav">
-                                    <li><a href="#"> View as guest </a></li>
+                                    {/* <li><a href="#"> View as guest </a></li>
                                     <li><a href="#"> Block this person </a></li>
-                                    <li><a href="#"> Report abuse</a></li>
+                                    <li><a href="#"> Report abuse</a></li> */}
                                 </ul>
                             </div>
                         </div>}
@@ -315,9 +315,9 @@ const profile = ({ setAlert, getProfileById, getCurrentProfile, profile: { profi
                             <a href="#" className="button light button-icon mr-lg-3" aria-expanded="false"> <i className="uil-ellipsis-h"> </i> </a>
                             <div uk-dropdown="pos: bottom-left ; mode:hover" className="display-hidden uk-dropdown">
                                 <ul className="uk-nav uk-dropdown-nav">
-                                    <li><a href="#"> View as guest </a></li>
+                                    {/* <li><a href="#"> View as guest </a></li>
                                     <li><a href="#"> Block this person </a></li>
-                                    <li><a href="#"> Report abuse</a></li>
+                                    <li><a href="#"> Report abuse</a></li> */}
                                 </ul>
                             </div>
                         </div>}
@@ -329,14 +329,14 @@ const profile = ({ setAlert, getProfileById, getCurrentProfile, profile: { profi
                             <a href="#" className="button light button-icon mr-lg-3" aria-expanded="false"> <i className="uil-ellipsis-h"> </i> </a>
                             <div uk-dropdown="pos: bottom-left ; mode:hover" className="display-hidden uk-dropdown">
                                 <ul className="uk-nav uk-dropdown-nav">
-                                    <li><a href="#"> View as guest </a></li>
+                                    {/* <li><a href="#"> View as guest </a></li>
                                     <li><a href="#"> Block this person </a></li>
-                                    <li><a href="#"> Report abuse</a></li>
+                                    <li><a href="#"> Report abuse</a></li> */}
                                 </ul>
                             </div>
                         </div>}
 
-                    <div>
+                    <div className="rem_tab">
                         <nav className="responsive-tab ml-lg-3">
                             <ul style={{ display: 'flex', listStyleType: 'none' }}>
                                 <li className="uk-active"><a className="active" href="#">Timeline</a></li>
