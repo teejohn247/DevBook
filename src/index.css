@@ -13,6 +13,7 @@ code {
 }
 .login{
   background-color: white;
+  /* background-image: linear-gradient(to right top, #2e58d4, #2953d1, #244fcf, #1f4acc, #1945c9); */
   background-size: cover;
   position: fixed;
   top: 0;

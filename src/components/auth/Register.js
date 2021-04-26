@@ -55,7 +55,7 @@ const Register = ({ setAlert, register, isAuthenticated, alert }) => {
             <div className="login" style={{ "height": "100vh" }} >
                 <div uk-height-viewport className="uk-flex uk-flex-middle">
                     <div className="uk-width-2-3@m uk-width-1-2@s m-auto rounded uk-overflow-hidden shadow-lg">
-                        <div className="uk-child-width-1-2@m uk-grid-collapse bg-gradient-primary uk-grid" uk-grid
+                        <div className="uk-child-width-1-2@m uk-grid-collapse bg-gradient-primary uk-grid log_mob" uk-grid
                             style={{ "marginTop": "7vh" }}>
                             {/* column one */}
                             <div className="uk-margin-auto-vertical uk-text-center uk-animation-scale-up p-3 uk-light">
@@ -70,7 +70,7 @@ const Register = ({ setAlert, register, isAuthenticated, alert }) => {
                                     <p className="my-2">Login to manage your account.</p>
                                 </div>
 
-                                <form className="uk-child-width-1-1 uk-grid-small" uk-grid onSubmit={e => onSubmit(e)}>
+                                <form className="uk-child-width-1-1 uk-grid-small for_form" uk-grid onSubmit={e => onSubmit(e)}>
                                     <div>
                                         <div className="uk-form-group">
                                             <label className="uk-form-label"> Name</label>

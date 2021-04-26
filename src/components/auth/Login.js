@@ -49,7 +49,7 @@ const Login = ({ setAlert, login, alert, isAuthenticated, user }) => {
             <div className="login" style={{ "height": "100vh" }}>
                 <div uk-height-viewport className="login uk-flex uk-flex-middle">
                     <div className="uk-width-2-3@m uk-width-1-2@s m-auto rounded uk-overflow-hidden shadow-lg">
-                        <div className="uk-child-width-1-2@m uk-grid-collapse bg-gradient-primary uk-grid" uk-grid
+                        <div className="uk-child-width-1-2@m uk-grid-collapse bg-gradient-primary uk-grid log_mob" uk-grid
                             style={{ "marginTop": "7vh" }}>
                             {/* column one */}
                             <div className="uk-margin-auto-vertical uk-text-center uk-animation-scale-up p-3 uk-light">
@@ -63,7 +63,7 @@ const Login = ({ setAlert, login, alert, isAuthenticated, user }) => {
                                     <h2 className="mb-0"> Welcome back</h2>
                                     <p className="my-2">Login to manage your account.</p>
                                 </div>
-                                <form onSubmit={e => onSubmit(e)}>
+                                <form className="for_form" onSubmit={e => onSubmit(e)}>
                                     <div className="uk-form-group">
                                         <label className="uk-form-label"> Email</label>
                                         <div className="uk-position-relative w-100">
