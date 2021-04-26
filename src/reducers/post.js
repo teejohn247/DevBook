@@ -15,11 +15,6 @@ const initialState = {
 export default function (state = initialState, action) {
 
     const { type, payload, profile } = action;
-
-    console.log('comment', payload, profile)
-    if(profile && payload){
-        console.log(payload.user_id == profile.profile.user, payload.user_id,profile.profile.user, "ccncn")
-    }
     switch (type) {
 
         case GET_POST:
