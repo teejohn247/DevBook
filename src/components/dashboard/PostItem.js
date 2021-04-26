@@ -346,7 +346,7 @@ const PostItem = ({ getProfileById, deletePost, socket, likes, post: { file_id, 
                     {user_id == user._id &&
                         <div className="post-btn-action">
                             <span className="icon-more uil-ellipsis-h" />
-                            <div className="mt-0 p-2" uk-dropdown="pos: top-right;mode:hover ">
+                            <div className="mt-0 p-2 uk-dropdown uk-dropdown-top-right" uk-dropdown="pos: top-right;mode:hover ">
                                 <ul className="uk-nav uk-dropdown-nav">
                                     {/* <li><a href="#"> <i className="uil-share-alt mr-1" /> Share</a> </li>
                                 <li><a href="#"> <i className="uil-edit-alt mr-1" /> Edit Post </a></li>
@@ -550,7 +550,7 @@ const PostItem = ({ getProfileById, deletePost, socket, likes, post: { file_id, 
                         {user_id == user._id &&
                         <div className="post-btn-action">
                             <span className="icon-more uil-ellipsis-h" />
-                            <div className="mt-0 p-2" uk-dropdown="pos: top-right;mode:hover ">
+                            <div className="mt-0 p-2 uk-dropdown uk-dropdown-top-right" uk-dropdown="pos: top-right;mode:hover ">
                                 <ul className="uk-nav uk-dropdown-nav">
                                     {/* <li><a href="#"> <i className="uil-share-alt mr-1" /> Share</a> </li>
                                 <li><a href="#"> <i className="uil-edit-alt mr-1" /> Edit Post </a></li>
