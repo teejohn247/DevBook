@@ -42,6 +42,13 @@ position: "absolute", left: "68%", top: "40vh", zIndex:"200" */
   width: 120px !important;
 }
 
+.nav-profile {
+  display: none !important;
+}
+.profile-details-info{
+  padding: 15px !important;
+}
+
 
 
 
@@ -49,20 +56,16 @@ position: "absolute", left: "68%", top: "40vh", zIndex:"200" */
   .login{
     background-image: linear-gradient(to right top, #2e58d4, #2953d1, #244fcf, #1f4acc, #1945c9) !important;
     background-size: cover;
-    position: relative !important;
+    position: absolute !important;
     overflow: auto;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     width: 100%;
     height: 100vh;
   }
   .for_form{
-    overflow: auto;
+    /* overflow: auto; */
   }
   .rem_tab{
-    display:none;
+    display:none !important;
   }
   .log_mob{
     background: transparent !important;

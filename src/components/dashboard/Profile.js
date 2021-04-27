@@ -245,8 +245,8 @@ const profile = ({ setAlert, getProfileById, getCurrentProfile, profile: { profi
                 </div>
                 <div className="profile-details">
                     <div className="profile-image">
-                        <img src={profile.image ? profile.image : "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"} style={{ objectFit: "contain" }} alt />
-                        <a href="#"> </a>
+                        <img src={profile.image ? profile.image : "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"} style={{ objectFit: "cover" }} alt />
+                        <a onClick={onClick}> </a>
                     </div>
                     <div className="profile-details-info">
                         <h1> {profile.name} </h1>
@@ -254,7 +254,7 @@ const profile = ({ setAlert, getProfileById, getCurrentProfile, profile: { profi
                             {profile.skills > 0 && profile.skills.map((skill, i) => {
                                 return <span>{skill}</span>
                             })}
-                            <a href="#">Edit </a></p>
+                            <a onClick={onClick}>Edit </a></p>
                         <p>
                             Works @ {profile.company}
                         </p>

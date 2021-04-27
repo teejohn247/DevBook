@@ -324,9 +324,8 @@ const input = ({ editProfile, user, profile, getPosts, onClick, value }) => {
                                                                 <span>
                                                                     <img src={profile.image} alt style={{
                                                                         width: "100%",
-                                                                        height: "60%",
                                                                         borderRadius: "10px",
-                                                                        objectFit:"cover"
+                                                                        objectFit:"cover !important"
                                                                     }} />
 
                                                                     <label htmlFor="upload-button" style={{ display: 'flex' }}>
@@ -348,7 +347,7 @@ const input = ({ editProfile, user, profile, getPosts, onClick, value }) => {
                                                                 : selectetdFile.map((a, i) => <span>
                                                                     <img key={i} src={a} style={{
                                                                         width: "100%",
-                                                                        height: "60%",
+                                                                        objectFit:"cover",
                                                                         borderRadius: "10px"
                                                                     }}
                                                                     />
@@ -373,7 +372,7 @@ const input = ({ editProfile, user, profile, getPosts, onClick, value }) => {
 
                                                             <div className="post-new-media" style={{ marginTop: "15px", marginBottom: "0px" }}>
                                                                 <div className="post-new-media-user post-title">
-                                                                    <h5 style={{ color: "white" }}>Name</h5>
+                                                                    <h5 style={{ color: "white" }}>Name:</h5>
                                                                 </div>
                                                                 <div className="post-new-media-input" style={{ alignSelf: "flex-end" }}>
                                                                     <h6 style={{ color: "white" }}>{user.name}</h6>
@@ -383,7 +382,7 @@ const input = ({ editProfile, user, profile, getPosts, onClick, value }) => {
                                                             <div className="post-new-media" style={{ marginBottom: "0px" }}>
                                                                 <div className="post-new-media-user post-title">
 
-                                                                    <h5 style={{ color: "white" }}>Company</h5>
+                                                                    <h5 style={{ color: "white" }}>Company:</h5>
                                                                 </div>
                                                                 <div className="post-new-media-input" style={{ alignSelf: "flex-end" }}>
                                                                     <h6 style={{ color: "white" }}>{profile.company}</h6>
@@ -393,7 +392,7 @@ const input = ({ editProfile, user, profile, getPosts, onClick, value }) => {
                                                             <div className="post-new-media" style={{ marginBottom: "0px" }}>
                                                                 <div className="post-new-media-user post-title">
 
-                                                                    <h5 style={{ color: "white" }}>Github</h5>
+                                                                    <h5 style={{ color: "white" }}>Github:</h5>
                                                                 </div>
                                                                 <div className="post-new-media-input" style={{ alignSelf: "flex-end" }}>
                                                                     <h6 style={{ color: "white" }}>{profile.githubusername}</h6>
@@ -403,7 +402,7 @@ const input = ({ editProfile, user, profile, getPosts, onClick, value }) => {
                                                             <div className="post-new-media" style={{ marginBottom: "0px" }}>
                                                                 <div className="post-new-media-user post-title">
 
-                                                                    <h5 style={{ color: "white" }}>Website</h5>
+                                                                    <h5 style={{ color: "white" }}>Website:</h5>
                                                                 </div>
                                                                 <div className="post-new-media-input" style={{ alignSelf: "flex-end" }}>
                                                                     <h6 style={{ color: "white" }}>{profile.website}</h6>
@@ -413,7 +412,7 @@ const input = ({ editProfile, user, profile, getPosts, onClick, value }) => {
                                                             <div className="post-new-media" style={{ marginBottom: "0px" }}>
                                                                 <div className="post-new-media-user post-title">
 
-                                                                    <h5 style={{ color: "white" }}>Location</h5>
+                                                                    <h5 style={{ color: "white" }}>Location:</h5>
                                                                 </div>
                                                                 <div className="post-new-media-input" style={{ alignSelf: "flex-end" }}>
                                                                     <h6 style={{ color: "white" }}>{profile.location}</h6>
