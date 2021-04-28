@@ -11,7 +11,6 @@ const initialState = {
     error: {}
 }
 
-
 export default function (state = initialState, action) {
 
     const { type, payload, profile } = action;
@@ -36,7 +35,7 @@ export default function (state = initialState, action) {
                 // payload.user_id == profile.user ||
                 ...state,
                 post: payload,
-                posts: [payload.user_id == profile.profile.user ? payload : profile.profile.friendsList.some(frnd => frnd.user == payload.user_id ? payload : ''), ...state.posts],
+                posts: [payload.user_id == profile.profile.user ? payload : profile.profile.friendsList.some(frnd => frnd.user == payload.user_id) ? payload : '', ...state.posts],
                 loading: false,
                 feedLoader: false
             }

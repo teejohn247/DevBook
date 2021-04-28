@@ -619,7 +619,7 @@ const Header = ({ chat, logout, getProfiles, deletePost, addNotification, getFri
                                                                     <i className="icon-feather-message-circle" /></span>}
                                                             <span className="notification-text">
                                                                 {/* data.sender !== users._id */}
-                                                                <strong>{notf.sender == user._id ? notf.sender_name : notf.reciever_name} </strong>{notf.notificationType == "likePost" ? "Like Your Post" : notf.notificationType == "FriendRequest" ? "Sent you a friend request" : notf.notificationType == "Accepted Request" ? "Accepted your friend request" : "Commented on your post"}
+                                                                <strong>{notf.sender == user._id ? notf.receiver_name : notf.sender_name } </strong>{notf.notificationType == "likePost" ? "Like Your Post" : notf.notificationType == "FriendRequest" ? "Sent you a friend request" : notf.notificationType == "Accepted Request" ? "Accepted your friend request" : "Commented on your post"}
                                                                 {/* <span className="text-primary">Learn Prototype Faster</span> */}
                                                                 <br /> <span className="time-ago"> 9 hours ago </span>
                                                             </span>
